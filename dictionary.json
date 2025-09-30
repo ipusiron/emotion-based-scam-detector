@@ -1,0 +1,38 @@
+{
+  "emergency": [
+    "urgent",
+    "immediately",
+    "now",
+    "asap",
+    "important",
+    "response required",
+    "至急",
+    "緊急",
+    "異常",
+    "今すぐ"
+  ],
+  "fear": [
+    "penalty",
+    "fine",
+    "police",
+    "lawsuit",
+    "account suspension",
+    "warning",
+    "罰金",
+    "警察",
+    "差し押さえ",
+    "今すぐ"
+  ],
+  "greed": [
+    "reward",
+    "free",
+    "gift",
+    "prize",
+    "winner",
+    "limited offer",
+    "big earnings",
+    "報酬",
+    "無料",
+    "当選"
+  ]
+}

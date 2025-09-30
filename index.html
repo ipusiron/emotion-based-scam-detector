@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="フィッシングや詐欺メッセージの感情的トリガーワードを検出する無料ツール">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';">
+  <title>Emotion‑Based Scam Detector</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-R6u/LdF4p2aBUtwHpkZjdvVCU5UuDwz2lxMDqhVfXh/nWEQvRHsWavsqUr/C0U7H" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <h1>Emotion‑Based Scam Detector</h1>
+    <p>フィッシングや詐欺メッセージによく使われる感情的な言葉を分析するツールです。<br>怪しいメールやチャットメッセージを下に貼り付けて、<strong>解析</strong>ボタンをクリックするとハイライト表示とリスクスコアが表示されます。</p>
+  </header>
+
+  <div id="legend">
+    <p><span class="highlight emergency">緊急性</span> – 急を要する表現</p>
+    <p><span class="highlight fear">恐怖</span> – 恐怖を煽る言葉</p>
+    <p><span class="highlight greed">欲望</span> – 報酬や特典を示す表現</p>
+  </div>
+
+  <div id="presets">
+    <p class="presets-label">サンプルメッセージを選択:</p>
+    <select id="presetSelect" class="preset-select">
+      <option value="">-- 詐欺メッセージの例を選ぶ --</option>
+      <optgroup label="日本語サンプル">
+        <option value="phishing_jp">フィッシング詐欺（アカウント確認）</option>
+        <option value="delivery_jp">偽配送通知（不在通知）</option>
+        <option value="support_jp">偽サポート（アカウント停止）</option>
+        <option value="tax_jp">偽税務署（未納税金）</option>
+        <option value="investment_jp">投資詐欺（高額収益）</option>
+        <option value="lottery_jp">偽当選通知（高額賞金）</option>
+        <option value="job_jp">偽副業案内（高収入）</option>
+        <option value="romance_jp">ロマンス詐欺（投資勧誘）</option>
+      </optgroup>
+      <optgroup label="English Sample">
+        <option value="phishing_en">Phishing (Account Security)</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <textarea id="inputText" placeholder="メールやチャットメッセージをここに貼り付けてください..."></textarea>
+  <div class="button-group">
+    <button id="analyzeBtn">解析</button>
+    <button id="clearBtn" class="secondary">クリア</button>
+  </div>
+
+  <div id="result" hidden>
+    <h2>解析結果</h2>
+
+    <div class="result-container">
+      <div class="result-left">
+        <div class="risk-summary">
+          <div class="risk-score-display">
+            <div class="score-label">総合リスクスコア</div>
+            <div class="score-value" id="totalScore">0</div>
+            <div class="score-max">/ 100</div>
+          </div>
+          <div class="risk-assessment" id="riskAssessment">
+            <div class="assessment-badge" id="riskBadge">低リスク</div>
+            <div class="assessment-text" id="assessmentText">このメッセージは比較的安全です</div>
+          </div>
+        </div>
+
+        <div class="category-scores">
+          <div class="category-score">
+            <span class="category-name">緊急性</span>
+            <div class="score-bar">
+              <div class="score-fill emergency-fill" id="emergencyBar" style="width: 0%"></div>
+            </div>
+            <span class="score-number" id="emergencyScore">0</span>
+          </div>
+          <div class="category-score">
+            <span class="category-name">恐怖</span>
+            <div class="score-bar">
+              <div class="score-fill fear-fill" id="fearBar" style="width: 0%"></div>
+            </div>
+            <span class="score-number" id="fearScore">0</span>
+          </div>
+          <div class="category-score">
+            <span class="category-name">欲望</span>
+            <div class="score-bar">
+              <div class="score-fill greed-fill" id="greedBar" style="width: 0%"></div>
+            </div>
+            <span class="score-number" id="greedScore">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-right">
+        <div class="chart-container">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div id="highlightedText" class="text-output"></div>
+
+    <div class="safety-tips">
+      <button class="accordion-header" id="safetyTipsToggle">
+        <span>🛡️ 詐欺メッセージへの対処法</span>
+        <span class="accordion-icon">▼</span>
+      </button>
+      <div class="accordion-content" id="safetyTipsContent">
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-icon">🚫</div>
+            <div class="tip-title">リンクをクリックしない</div>
+            <div class="tip-desc">メール内のリンクやボタンは絶対にクリックしないでください。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🔍</div>
+            <div class="tip-title">公式サイトを確認</div>
+            <div class="tip-desc">検索エンジンで公式サイトを探し、お知らせページをチェックしてください。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🌐</div>
+            <div class="tip-title">直接ログイン</div>
+            <div class="tip-desc">ブラウザーで公式サイトに直接アクセスし、マイページから状況を確認してください。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">📞</div>
+            <div class="tip-title">公式に問い合わせ</div>
+            <div class="tip-desc">不安な場合は、公式サイトに記載された電話番号に直接連絡してください。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🔒</div>
+            <div class="tip-title">個人情報を入力しない</div>
+            <div class="tip-desc">パスワードやクレジットカード情報を求められても絶対に入力しないでください。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">⏰</div>
+            <div class="tip-title">焦らず冷静に</div>
+            <div class="tip-desc">「今すぐ」「至急」などの言葉に焦らされず、一度冷静になって考えましょう。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🐦</div>
+            <div class="tip-title">SNSで検索</div>
+            <div class="tip-desc">Xで同様のメッセージについての報告がないか検索してみましょう。</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">👥</div>
+            <div class="tip-title">詳しい人に相談</div>
+            <div class="tip-desc">コンピューターに詳しい友人や家族に相談してからアクションしてください。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer">
+      🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/leetforge" target="_blank" rel="noopener noreferrer">ipusiron/leetforge</a> ）
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
