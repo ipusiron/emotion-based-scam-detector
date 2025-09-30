@@ -17,7 +17,7 @@ demo: https://ipusiron.github.io/emotion-based-scam-detector/
 ![GitHub license](https://img.shields.io/github/license/ipusiron/emotion-based-scam-detector)
 [![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-blue?logo=github)](https://ipusiron.github.io/emotion-based-scam-detector/)
 
-**Day079 - 生成AIで作るセキュリティツール100**
+**Day081 - 生成AIで作るセキュリティツール100**
 
 **Emotion‑Based Scam Detector** は、メールやチャットなどの文章に潜む「緊急性」「恐怖」「誘惑」といった感情を刺激するキーワードを検出するツールです。
 
