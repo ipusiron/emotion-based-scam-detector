@@ -30,7 +30,7 @@ demo: https://ipusiron.github.io/emotion-based-scam-detector/
 
 ## 🌐 デモページ
 
-👉 **[https://ipusiron.github.io/leetforge/](https://ipusiron.github.io/leetforge/)**
+👉 **[https://ipusiron.github.io/emotion-based-scam-detector/](https://ipusiron.github.io/emotion-based-scam-detector/)**
 
 ブラウザーで直接お試しいただけます。
 
