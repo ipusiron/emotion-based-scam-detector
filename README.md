@@ -9,7 +9,7 @@ demo: https://ipusiron.github.io/emotion-based-scam-detector/
 ---
 -->
 
-# Emotion‑Based Scam Detector
+# Emotion‑Based Scam Detector - メッセージの感情トリガー検出ツール
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/ipusiron/emotion-based-scam-detector?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/ipusiron/emotion-based-scam-detector?style=social)
