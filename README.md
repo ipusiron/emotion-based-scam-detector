@@ -1,11 +1,39 @@
 <!--
 ---
-title: Emotion‑Based Scam Detector
-category: scam-detection
-difficulty: 1
-description: Browser-based tool that detects emotion-driven triggers in messages to help users identify potential phishing or scam attempts.
-tags: [scam, phishing, social engineering, education, javascript]
-demo: https://ipusiron.github.io/emotion-based-scam-detector/
+id: day081
+slug: emotion-based-scam-detector
+
+title: "Emotion-Based Scam Detector"
+
+subtitle_ja: "メッセージの感情トリガー検出ツール"
+subtitle_en: "Emotional trigger detector for phishing and scam messages"
+
+description_ja: "メールやチャットに含まれる「緊急性」「恐怖」「欲望」などの感情を刺激するキーワードを検出し、フィッシングや詐欺メッセージを識別するブラウザベースのツール"
+description_en: "Browser-based tool that detects emotion-driven triggers (urgency, fear, greed) in messages to help users identify potential phishing or scam attempts"
+
+category_ja:
+  - 詐欺検出
+  - ソーシャルエンジニアリング
+  - フィッシング詐欺
+category_en:
+  - Scam Detection
+  - Social Engineering
+  - phishing
+
+difficulty: 2
+
+tags:
+  - scam
+  - phishing
+  - social-engineering
+  - education
+  - javascript
+  - client-side
+
+repo_url: "https://github.com/ipusiron/emotion-based-scam-detector"
+demo_url: "https://ipusiron.github.io/emotion-based-scam-detector/"
+
+hub: true
 ---
 -->
 

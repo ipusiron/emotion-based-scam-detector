@@ -10,20 +10,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Fear** (恐怖): Fear-inducing terms like "penalty", "police", "lawsuit", "罰金"
 - **Greed** (欲望): Enticing phrases like "reward", "free", "prize", "報酬"
 
-The tool highlights detected words with color-coded spans and assigns a risk level (Low/Medium/High) based on the number of matches.
+The tool highlights detected words with color-coded spans, displays a radar chart visualization, and assigns a risk level (極小/低/中/高) based on calculated scores.
 
 ## Architecture
 
-This is a simple static web application with no server-side processing:
+This is a static web application with no server-side processing:
 
-- **index.html**: Page structure with textarea input, analyze button, and results display area
+- **index.html**: Page structure with textarea input, preset selector, analyze button, results display (radar chart, progress bars, highlighted text), and accordion-based safety tips
 - **style.css**: Styling including category-specific highlight colors (yellow for emergency, red for fear, green for greed)
-- **script.js**: Core analysis logic that:
-  1. Fetches `dictionary.json` on page load
-  2. Analyzes text using regex patterns with word boundaries (`\b`)
-  3. Highlights matches with `<span class="highlight {category}">`
-  4. Calculates risk score: Low (0 matches), Medium (1-3 matches), High (>3 matches)
-- **dictionary.json**: Keyword dictionary organized by category (emergency/fear/greed) with both English and Japanese terms
+- **script.js**: Core analysis logic including:
+  - Fetching `data/dictionary.json` on page load
+  - Text analysis using regex patterns (word boundaries for ASCII, direct match for Japanese)
+  - Score calculation: each category 0-10 (count × 2, capped at 10), total 0-100
+  - Chart.js radar chart visualization
+  - 9 preset sample messages (Japanese/English phishing, delivery, tax, investment, lottery, job, romance scams)
+- **data/dictionary.json**: Keyword dictionary (169 words) organized by category with both English and Japanese terms
 
 ## Development
 
@@ -32,37 +33,36 @@ This is a simple static web application with no server-side processing:
 # Open directly in browser
 start index.html
 
-# Or use a local server
+# Or use a local server (required for fetch to work in some browsers)
 python -m http.server 8000
 # Then visit http://localhost:8000
 ```
 
-### Testing
-No automated test suite. Manual testing by:
-1. Pasting sample scam/phishing messages into the textarea
-2. Verifying correct highlighting and risk level calculation
-
 ### Modifying detection keywords
-Edit `dictionary.json` to add/remove keywords. Changes are loaded on page refresh. The structure is:
+Edit `data/dictionary.json` to add/remove keywords. Changes are loaded on page refresh. Structure:
 ```json
 {
-  "category_name": ["keyword1", "keyword2", ...]
+  "emergency": ["keyword1", ...],
+  "fear": ["keyword1", ...],
+  "greed": ["keyword1", ...]
 }
 ```
 
-To add new categories, update both `dictionary.json` and the legend in `index.html`.
+**Note**: Adding new categories requires updates to both `script.js` (categoryCount object, radar chart labels) and `index.html` (legend, progress bars).
 
 ## Key Implementation Details
 
-- **Case-insensitive matching**: Uses lowercase text copy for detection (`text.toLowerCase()`)
-- **Word boundary matching**: Regex uses `\b` to avoid partial matches
-- **Risk scoring**: Simple count-based (script.js:61-65)
-- **Privacy**: All processing happens in-browser; no data is sent externally
-- **Offline capable**: Once loaded, works without internet (static files only)
+- **Risk scoring** (script.js:232-255): Category scores = min(count × 2, 10), total = (sum / 30) × 100
+  - 極小リスク: < 15
+  - 低リスク: 15-39
+  - 中リスク: 40-69
+  - 高リスク: ≥ 70
+- **Word boundary handling** (script.js:212-215): Uses `\b` regex boundaries only for words containing ASCII characters; Japanese words match directly
+- **XSS prevention**: `escapeHtml()` function sanitizes user input before DOM insertion
+- **Security headers**: CSP, X-Frame-Options, X-Content-Type-Options, SRI for Chart.js CDN
 
 ## Deployment
 
-Designed for static hosting (GitHub Pages, Netlify). The demo is hosted at:
-https://ipusiron.github.io/emotion-based-scam-detector/
+Designed for static hosting (GitHub Pages, Netlify). Demo: https://ipusiron.github.io/emotion-based-scam-detector/
 
 Part of the "生成AIで作るセキュリティツール100" (100 Security Tools with Generative AI) project.
