@@ -8,7 +8,7 @@ title: "Emotion-Based Scam Detector"
 subtitle_ja: "メッセージの感情トリガー検出ツール"
 subtitle_en: "Emotional trigger detector for phishing and scam messages"
 
-description_ja: "メールやチャットに含まれる「緊急性」「恐怖」「欲望」などの感情を刺激するキーワードを検出し、フィッシングや詐欺メッセージを識別するブラウザベースのツール"
+description_ja: "メールやチャットに含まれる「緊急性」「恐怖」「欲望」などの感情を刺激するキーワードを検出し、フィッシングや詐欺メッセージを識別するブラウザーベースのツール"
 description_en: "Browser-based tool that detects emotion-driven triggers (urgency, fear, greed) in messages to help users identify potential phishing or scam attempts"
 
 category_ja:
@@ -114,7 +114,7 @@ hub: true
 4. 「こういう言葉が入っているメールは危ない」という具体的な判断基準を習得
 5. 講師が「実際に怪しいメールが届いたら、まず家族に相談してからこのツールで確認しましょう」と指導
 
-**効果**: ITに不慣れな方でも、シンプルなUIで簡単に詐欺の特徴を学べます。色分けされたハイライトは視覚的に分かりやすく、記憶に残りやすいです。
+**効果**: ITに不慣れな方でも、シンプルなUIで簡単に詐欺の特徴を学べます。色分けされたハイライトは視覚的にわかりやすく、記憶に残りやすいです。
 
 ### シナリオ3: 個人のメールチェック習慣化
 

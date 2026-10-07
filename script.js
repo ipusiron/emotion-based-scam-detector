@@ -120,10 +120,14 @@
    * @returns {string}
    */
   function radarDescription(result) {
-    return CATEGORIES.map(function (category) {
+    var items = CATEGORIES.map(function (category) {
       var bucket = result.categories[category];
-      return t('category.' + category + '.label') + (bucket ? bucket.score : 0);
-    }).join('、') + '。10点満点。';
+      return t('radar.item', {
+        label: t('category.' + category + '.label'),
+        score: bucket ? bucket.score : 0
+      });
+    });
+    return t('radar.desc', { summary: items.join(t('radar.separator')) });
   }
 
   /** 入力された本文を解析して、画面を更新する。 */

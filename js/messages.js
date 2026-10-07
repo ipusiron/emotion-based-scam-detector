@@ -41,7 +41,9 @@
     'radar.threshold': 'しきい値（警戒ライン）',
     'radar.detected': '検出スコア',
     'radar.title': 'カテゴリー別スコアのレーダーチャート',
-    'radar.desc': '{summary}',
+    'radar.desc': '{summary}。10点満点。',
+    'radar.item': '{label}{score}',
+    'radar.separator': '、',
 
     // 画面の案内
     'result.heading': '解析結果',
