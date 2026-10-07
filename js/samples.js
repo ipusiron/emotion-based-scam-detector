@@ -1,15 +1,21 @@
 /**
  * SCAM_SAMPLES - 画面のドロップダウンから読み込むサンプル本文。
  *
- * どれも実在の詐欺メッセージそのものではなく、よくある言い回しを集めた作り物である。
+ * kind が 'scam' のものは詐欺メッセージの模造品で、'legit' のものは正規の通知の模造品である。
+ * どれも実在のメッセージそのものではなく、よくある言い回しを集めた作り物である。
  * 連絡先とURLはexample.comなど、実在しないものに置き換えてある。
+ *
+ * 正規のものを混ぜてあるのは、「正規の通知にも同じ語が使われる」ことを
+ * 画面の上で確かめられるようにするためである（偽陽性の体験）。
  */
 (function (global) {
   'use strict';
 
   global.SCAM_SAMPLES = {
     // フィッシング詐欺（アカウント確認）
-    phishing_jp: `【重要】アカウント確認のお願い
+    phishing_jp: {
+      kind: 'scam',
+      text: `【重要】アカウント確認のお願い
 
 お客様各位
 
@@ -21,10 +27,13 @@
 
 今すぐ確認する: https://example.com/verify
 
-※このメールは緊急を要します。`,
+※このメールは緊急を要します。`
+    },
 
     // 偽配送通知（不在通知）
-    delivery_jp: `【配送業者】荷物配達のお知らせ
+    delivery_jp: {
+      kind: 'scam',
+      text: `【配送業者】荷物配達のお知らせ
 
 お荷物をお届けに伺いましたが、ご不在でした。
 
@@ -35,10 +44,13 @@ https://example.com/redelivery
 
 ※このメッセージに速やかにご対応いただけない場合、追加の保管料金が発生する可能性があります。
 
-重要：今すぐご確認ください。`,
+重要：今すぐご確認ください。`
+    },
 
     // 偽サポート（アカウント停止）
-    support_jp: `【緊急】カスタマーサポートからの重要通知
+    support_jp: {
+      kind: 'scam',
+      text: `【緊急】カスタマーサポートからの重要通知
 
 お客様
 
@@ -52,10 +64,13 @@ https://example.com/redelivery
 
 今すぐ確認：https://example.com/support
 
-カスタマーサポートチーム`,
+カスタマーサポートチーム`
+    },
 
     // 偽税務署（未納税金）
-    tax_jp: `【国税庁】未納税金に関する重要なお知らせ
+    tax_jp: {
+      kind: 'scam',
+      text: `【国税庁】未納税金に関する重要なお知らせ
 
 重要な通知
 
@@ -67,10 +82,13 @@ https://example.com/redelivery
 連絡先：03-XXXX-XXXX
 ※緊急の案件につき、速やかな対応をお願いします。
 
-未対応の場合、訴訟手続きに入ります。`,
+未対応の場合、訴訟手続きに入ります。`
+    },
 
     // 投資詐欺（高額収益）
-    investment_jp: `🎉当選おめでとうございます🎉
+    investment_jp: {
+      kind: 'scam',
+      text: `🎉当選おめでとうございます🎉
 
 あなたが特別に選ばれました！
 
@@ -84,10 +102,13 @@ https://example.com/redelivery
 このチャンスを逃すと二度と参加できません。
 重要なお知らせです。今すぐ下記URLをクリック！
 
-※至急お返事ください`,
+※至急お返事ください`
+    },
 
     // 偽当選通知（高額賞金）
-    lottery_jp: `【当選通知】高額賞金が当たりました！
+    lottery_jp: {
+      kind: 'scam',
+      text: `【当選通知】高額賞金が当たりました！
 
 おめでとうございます！
 
@@ -100,10 +121,13 @@ https://example.com/redelivery
 完全無料で受け取れますので、今すぐ以下のフォームからお申し込みください。
 
 ※期限を過ぎると受取権利は失効します。
-至急お手続きください。`,
+至急お手続きください。`
+    },
 
     // 偽副業案内（高収入）
-    job_jp: `【副業案内】月収50万円確実に稼げます
+    job_jp: {
+      kind: 'scam',
+      text: `【副業案内】月収50万円確実に稼げます
 
 こんにちは
 
@@ -120,10 +144,13 @@ https://example.com/redelivery
 残りわずかです。このチャンスを逃すと二度と参加できません。
 今すぐ下記URLから登録してください！
 
-https://example.com/job`,
+https://example.com/job`
+    },
 
     // ロマンス詐欺（投資勧誘）
-    romance_jp: `こんにちは
+    romance_jp: {
+      kind: 'scam',
+      text: `こんにちは
 
 突然のメッセージ失礼します。
 あなたのプロフィールを見て、ぜひお話ししたいと思いました。
@@ -134,10 +161,13 @@ https://example.com/job`,
 限定的なオファーで、今だけ無料で始められます。
 一緒に素敵な未来を築きませんか？
 
-すぐに返信してくださいね。`,
+すぐに返信してくださいね。`
+    },
 
     // Phishing (Account Security)
-    phishing_en: `URGENT: Account Security Alert
+    phishing_en: {
+      kind: 'scam',
+      text: `URGENT: Account Security Alert
 
 Dear Valued Customer,
 
@@ -152,5 +182,93 @@ This is an important security warning. You have 24 hours to respond or face lega
 Act now to claim your account and avoid fines.
 
 Security Team`
+    },
+
+    // 正規の配送通知
+    legit_delivery_jp: {
+      kind: 'legit',
+      text: `お届け予定のお知らせ
+
+ご注文いただいた商品の発送が完了しました。
+
+お届け予定日：10月9日（木）
+時間帯：午前中
+お問い合わせ番号：1234-5678-9012
+
+ご不在の場合は、不在連絡票を投函いたします。
+再配達のご依頼は、お問い合わせ番号をご用意のうえ、
+配送業者の公式サイト、または電話窓口からお願いいたします。`
+    },
+
+    // 正規の銀行からのお知らせ
+    legit_bank_jp: {
+      kind: 'legit',
+      text: `【○○銀行】システムメンテナンスのお知らせ
+
+いつもご利用いただきありがとうございます。
+
+設備の更新にともない、下記の日時にインターネットバンキングのサービスを停止いたします。
+
+日時：10月15日（日）2:00〜5:00
+対象：残高照会、振込、定期預金のお手続き
+
+ご不便をおかけしますが、ご了承ください。
+ご不明な点は、通帳やキャッシュカードに記載の番号へお問い合わせください。
+
+※本メールは配信専用です。返信は受け付けておりません。`
+    },
+
+    // 正規の社内リマインド
+    legit_work_jp: {
+      kind: 'legit',
+      text: `【リマインド】経費精算の締切について
+
+お疲れさまです。総務部です。
+
+今月分の経費精算は、本日中が提出の期限となっています。
+未提出の方は至急ご対応をお願いします。
+
+提出先：社内ポータルの経費精算フォーム
+締切：本日18時
+
+期限を過ぎた分は翌月の精算となりますので、ご了承ください。
+やむをえない事情がある方は、個別にご相談ください。`
+    },
+
+    // 正規のキャンペーン案内
+    legit_campaign_jp: {
+      kind: 'legit',
+      text: `会員限定キャンペーンのご案内
+
+平素よりご愛顧いただき、ありがとうございます。
+
+会員の皆さまへ、期間限定で送料無料クーポンをお配りしています。
+
+特典：全商品の送料が無料
+期間：10月31日まで
+対象：会員登録がお済みのお客様
+
+クーポンはマイページから取得できます。
+配信の停止をご希望の場合は、マイページの設定からお手続きください。`
+    },
+
+    // Legitimate sign-in alert
+    legit_signin_en: {
+      kind: 'legit',
+      text: `Security alert: sign-in from a new device
+
+Hello,
+
+We noticed a sign-in to your account from a new device on October 5.
+
+Device: Windows PC
+Location: Tokyo, Japan
+
+If this was you, no action is needed. If you do not recognize this
+sign-in, open the app and review your security settings. Accounts with
+unauthorized access are locked automatically after our review.
+
+We will never ask for your password or payment details by email.`
+    }
   };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

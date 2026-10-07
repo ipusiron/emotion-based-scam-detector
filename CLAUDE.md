@@ -25,10 +25,30 @@ Scripts are plain (non-module) so the page also works when opened with `file://`
 | `script.js` | — | DOM wiring only: reads input, updates the view, no analysis logic |
 | `js/scam-core.js` | `ScamCore` | Matching and scoring. Never touches the DOM |
 | `js/radar.js` | `ScamRadar` | Radar chart. Vertex math is separate from drawing |
-| `js/messages.js` | `ScamMessages` | Every user-facing string, keyed. `script.js` holds no Japanese literals |
+| `js/messages.js` | `ScamMessages` | Every user-facing string, keyed, in `ja` and `en`. `script.js` holds no Japanese literals |
 | `js/dictionary.js` | `SCAM_DICTIONARY` | Built-in copy of the dictionary, used under `file://` |
-| `js/samples.js` | `SCAM_SAMPLES` | The nine preset messages |
+| `js/samples.js` | `SCAM_SAMPLES` | The 14 preset messages as `{kind, text}`; `kind` is `scam` or `legit` |
 | `data/dictionary.json` | — | The dictionary people edit. Fetched when served over HTTP |
+
+### Interface language
+
+`index.html` carries no visible text. Every string is pulled in at load time from `data-i18n`,
+`data-i18n-placeholder`, `data-i18n-label` and `data-i18n-optgroup` attributes. The only exception
+is `<noscript>`, which is written out in both languages because JavaScript cannot fill it.
+
+The language is resolved as `?lang=` → the saved choice in `localStorage` → `navigator.language`,
+falling back to Japanese. Switching re-applies the translations and re-renders the stored result,
+so the numbers on screen do not change when the language does.
+
+`test/i18n.test.js` asserts the `ja` and `en` key sets are identical, that no Japanese is left in
+the English table (apart from the language button), that every `data-i18n` key exists, and that
+`README.md` and `README.en.md` have the same heading structure.
+
+### Legitimate samples
+
+Five of the presets are legitimate notices. Analysing one shows a panel explaining that legitimate
+messages use the same words; it disappears as soon as the text is edited. Two of them reach medium
+risk and two score almost nothing, which is the point of including them.
 
 ### Dictionary loading
 
@@ -59,9 +79,9 @@ GitHub Actions runs `npm test` on push and pull request.
 
 ### Modifying detection keywords
 
-Edit `data/dictionary.json` and `js/dictionary.js` together, then update the word counts in `README.md` (two places) and `test/dictionary.test.js`.
+Edit `data/dictionary.json` and `js/dictionary.js` together, then update the word counts in `README.md`, `README.en.md` and `test/dictionary.test.js`.
 
-Adding a category also requires: a weight list of the same length in `TOTAL_WEIGHTS` (`js/scam-core.js`), the category in `CATEGORIES` (`script.js`), label and hint keys in `js/messages.js`, and the legend plus a score row in `index.html`. The radar adapts to the number of axes on its own.
+Adding a category also requires: a weight list of the same length in `TOTAL_WEIGHTS` (`js/scam-core.js`), the category in `CATEGORIES` (`script.js`), label and hint keys in both languages in `js/messages.js`, and the legend plus a score row in `index.html`. The radar adapts to the number of axes on its own.
 
 ## Key Implementation Details
 
@@ -94,7 +114,8 @@ The total weights the strongest emotions rather than averaging, because real sca
 ## Constraints
 
 - Do not add dependencies, a CDN, a bundler, or ES module syntax (`file://` must keep working).
-- Do not put user-facing strings in `script.js`; add them to `js/messages.js`.
+- Do not put user-facing strings in `script.js` or `index.html`; add them to `js/messages.js` in both languages and reference them with `data-i18n`.
+- Do not let `README.md` and `README.en.md` drift apart in structure; `test/i18n.test.js` compares their headings.
 - Do not write color literals outside the `:root` blocks in `style.css`; `test/contrast.test.js` enforces this and the 4.5:1 ratio in both themes.
 - Do not add inline event handlers or `style` attributes; the CSP has no `'unsafe-inline'`.
 - Keep the long-vowel notation (ブラウザー, サーバー, ディレクトリー) and no space between Japanese and alphanumerics; `test/format.test.js` checks this.

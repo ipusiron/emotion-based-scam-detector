@@ -68,6 +68,18 @@ test('READMEが参照する画像がすべて実在する', () => {
   }
 });
 
+test('README.en.mdが参照する画像もすべて実在する', () => {
+  const en = read('README.en.md');
+  const images = [...en.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)]
+    .map((m) => m[1])
+    .filter((p) => !/^https?:/.test(p));
+  assert.ok(images.length >= 3, `画像の参照が ${images.length} 件しかない`);
+  for (const rel of images) {
+    assert.ok(fs.existsSync(new URL(`../${rel}`, import.meta.url)), `${rel} が存在しない`);
+    assert.ok(rel.startsWith('assets/en/'), `英語版が日本語の画面を指している: ${rel}`);
+  }
+});
+
 test('消したファイルへの参照が残っていない', () => {
   // ルート直下の dictionary.json は削除した
   assert.ok(!/^├── dictionary\.json/m.test(readme));
@@ -94,12 +106,14 @@ test('サンプルのスコアの表が、実際の計算と一致する', () =>
   const rows = [...readme.matchAll(/^\| ([^|]+) \| (\d+) \| (\d+) \| (\d+) \| (\d+) \| (\S+リスク) \|$/gm)];
   assert.equal(rows.length, Object.keys(SAMPLES).length,
     `表の行が ${rows.length} 行（サンプルは ${Object.keys(SAMPLES).length} 件）`);
+  // 詐欺と正規の両方が表に載っていること
+  assert.ok(rows.length >= 14, '表の行が足りない');
   const label = {
     high: '高リスク', medium: '中リスク', low: '低リスク', veryLow: '極小リスク'
   };
   const byTotal = {};
   for (const key of Object.keys(SAMPLES)) {
-    const r = C.analyze(SAMPLES[key], DICT);
+    const r = C.analyze(SAMPLES[key].text, DICT);
     byTotal[`${r.categories.emergency.score}/${r.categories.fear.score}`
       + `/${r.categories.greed.score}/${r.total}`] = label[r.level];
   }

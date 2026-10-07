@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="フィッシングや詐欺メッセージの感情的トリガーワードを検出する無料ツール">
+  <meta name="description" id="pageDescription" content="フィッシングや詐欺メッセージの感情的トリガーワードを検出する無料ツール">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
   <title>Emotion-Based Scam Detector - メッセージの感情トリガー検出ツール</title>
@@ -11,69 +11,85 @@
 </head>
 <body>
   <header>
+    <div class="lang-bar">
+      <button id="langToggle" type="button" class="lang-toggle" data-i18n="lang.toggle" data-i18n-label="lang.toggleLabel"></button>
+    </div>
     <h1>Emotion-Based Scam Detector</h1>
-    <p>フィッシングや詐欺メッセージによく使われる感情的な言葉を分析するツールです。<br>怪しいメールやチャットメッセージを下に貼り付けて、<strong>解析</strong>ボタンを押すと、ハイライト表示とリスクスコアが出ます。</p>
+    <p>
+      <span data-i18n="header.lead1"></span><br>
+      <span data-i18n="header.lead2"></span>
+    </p>
   </header>
 
   <noscript>
-    <p class="notice notice-error">このツールはJavaScriptで動きます。ブラウザーのJavaScriptを有効にしてください。</p>
+    <p class="notice notice-error">このツールはJavaScriptで動きます。ブラウザーのJavaScriptを有効にしてください。<br>
+      This tool runs on JavaScript. Please enable JavaScript in your browser.</p>
   </noscript>
 
   <div id="legend">
-    <p><span class="highlight emergency">緊急性</span> – 考える時間を奪う表現</p>
-    <p><span class="highlight fear">恐怖</span> – 不利益をちらつかせる表現</p>
-    <p><span class="highlight greed">欲望</span> – 得をすると思わせる表現</p>
+    <p><span class="highlight emergency" data-i18n="category.emergency.label"></span> – <span data-i18n="category.emergency.hint"></span></p>
+    <p><span class="highlight fear" data-i18n="category.fear.label"></span> – <span data-i18n="category.fear.hint"></span></p>
+    <p><span class="highlight greed" data-i18n="category.greed.label"></span> – <span data-i18n="category.greed.hint"></span></p>
   </div>
 
   <div id="presets">
-    <label class="presets-label" for="presetSelect">サンプルメッセージを選択</label>
+    <label class="presets-label" for="presetSelect" data-i18n="presets.label"></label>
     <select id="presetSelect" class="preset-select">
-      <option value="">-- 詐欺メッセージの例を選ぶ --</option>
-      <optgroup label="日本語サンプル">
-        <option value="phishing_jp">フィッシング詐欺（アカウント確認）</option>
-        <option value="delivery_jp">偽配送通知（不在通知）</option>
-        <option value="support_jp">偽サポート（アカウント停止）</option>
-        <option value="tax_jp">偽税務署（未納税金）</option>
-        <option value="investment_jp">投資詐欺（高額収益）</option>
-        <option value="lottery_jp">偽当選通知（高額賞金）</option>
-        <option value="job_jp">偽副業案内（高収入）</option>
-        <option value="romance_jp">ロマンス詐欺（投資勧誘）</option>
+      <option value="" data-i18n="presets.placeholder"></option>
+      <optgroup data-i18n-optgroup="presets.group.scamJa">
+        <option value="phishing_jp" data-i18n="sample.phishing_jp.label"></option>
+        <option value="delivery_jp" data-i18n="sample.delivery_jp.label"></option>
+        <option value="support_jp" data-i18n="sample.support_jp.label"></option>
+        <option value="tax_jp" data-i18n="sample.tax_jp.label"></option>
+        <option value="investment_jp" data-i18n="sample.investment_jp.label"></option>
+        <option value="lottery_jp" data-i18n="sample.lottery_jp.label"></option>
+        <option value="job_jp" data-i18n="sample.job_jp.label"></option>
+        <option value="romance_jp" data-i18n="sample.romance_jp.label"></option>
       </optgroup>
-      <optgroup label="English Sample">
-        <option value="phishing_en">Phishing (Account Security)</option>
+      <optgroup data-i18n-optgroup="presets.group.scamEn">
+        <option value="phishing_en" data-i18n="sample.phishing_en.label"></option>
+      </optgroup>
+      <optgroup data-i18n-optgroup="presets.group.legit">
+        <option value="legit_delivery_jp" data-i18n="sample.legit_delivery_jp.label"></option>
+        <option value="legit_bank_jp" data-i18n="sample.legit_bank_jp.label"></option>
+        <option value="legit_work_jp" data-i18n="sample.legit_work_jp.label"></option>
+        <option value="legit_campaign_jp" data-i18n="sample.legit_campaign_jp.label"></option>
+        <option value="legit_signin_en" data-i18n="sample.legit_signin_en.label"></option>
       </optgroup>
     </select>
   </div>
 
   <p id="dictionaryNotice" class="notice" role="status" hidden></p>
 
-  <label class="input-label" for="inputText">解析するメッセージ</label>
-  <textarea id="inputText" placeholder="メールやチャットメッセージをここに貼り付けてください..."></textarea>
+  <label class="input-label" for="inputText" data-i18n="input.label"></label>
+  <textarea id="inputText" data-i18n-placeholder="input.placeholder"></textarea>
   <div class="button-group">
-    <button id="analyzeBtn" type="button">解析</button>
-    <button id="clearBtn" type="button" class="secondary">クリア</button>
+    <button id="analyzeBtn" type="button" data-i18n="button.analyze"></button>
+    <button id="clearBtn" type="button" class="secondary" data-i18n="button.clear"></button>
   </div>
 
   <div id="result" hidden>
-    <h2>解析結果</h2>
+    <h2 data-i18n="result.heading"></h2>
+
+    <p id="sampleNotice" class="notice notice-legit" role="status" hidden></p>
 
     <div class="result-container">
       <div class="result-left">
         <div class="risk-summary">
           <div class="risk-score-display">
-            <div class="score-label">総合リスクスコア</div>
+            <div class="score-label" data-i18n="result.total"></div>
             <div class="score-value" id="totalScore">0</div>
-            <div class="score-max">/ 100</div>
+            <div class="score-max" data-i18n="result.max"></div>
           </div>
           <div class="risk-assessment" id="riskAssessment" aria-live="polite">
-            <div class="assessment-badge" id="riskBadge">低リスク</div>
-            <div class="assessment-text" id="assessmentText">このメッセージは比較的安全です</div>
+            <div class="assessment-badge" id="riskBadge"></div>
+            <div class="assessment-text" id="assessmentText"></div>
           </div>
         </div>
 
         <div class="category-scores">
           <div class="category-score">
-            <span class="category-name" id="emergencyName">緊急性</span>
+            <span class="category-name" id="emergencyName" data-i18n="category.emergency.label"></span>
             <div class="score-bar" aria-hidden="true">
               <div class="score-fill emergency-fill" id="emergencyBar"></div>
             </div>
@@ -81,7 +97,7 @@
             <span class="score-detail" id="emergencyDetail"></span>
           </div>
           <div class="category-score">
-            <span class="category-name" id="fearName">恐怖</span>
+            <span class="category-name" id="fearName" data-i18n="category.fear.label"></span>
             <div class="score-bar" aria-hidden="true">
               <div class="score-fill fear-fill" id="fearBar"></div>
             </div>
@@ -89,7 +105,7 @@
             <span class="score-detail" id="fearDetail"></span>
           </div>
           <div class="category-score">
-            <span class="category-name" id="greedName">欲望</span>
+            <span class="category-name" id="greedName" data-i18n="category.greed.label"></span>
             <div class="score-bar" aria-hidden="true">
               <div class="score-fill greed-fill" id="greedBar"></div>
             </div>
@@ -103,76 +119,73 @@
         <div class="chart-container">
           <svg id="radarChart" class="radar" viewBox="0 0 300 230" role="img"></svg>
           <ul class="radar-legend">
-            <li><span class="legend-swatch legend-threshold" aria-hidden="true"></span>しきい値（警戒ライン）</li>
-            <li><span class="legend-swatch legend-detected" aria-hidden="true"></span>検出スコア</li>
+            <li><span class="legend-swatch legend-threshold" aria-hidden="true"></span><span data-i18n="radar.threshold"></span></li>
+            <li><span class="legend-swatch legend-detected" aria-hidden="true"></span><span data-i18n="radar.detected"></span></li>
           </ul>
         </div>
       </div>
     </div>
 
-    <h3 class="output-heading">本文のハイライト</h3>
+    <h3 class="output-heading" data-i18n="output.heading"></h3>
     <div id="highlightedText" class="text-output"></div>
 
     <div class="safety-tips">
       <button class="accordion-header" id="safetyTipsToggle" type="button" aria-expanded="false" aria-controls="safetyTipsContent">
-        <span>🛡️ 詐欺メッセージへの対処法</span>
+        <span data-i18n="tips.heading"></span>
         <span class="accordion-icon" aria-hidden="true">▼</span>
       </button>
       <div class="accordion-content" id="safetyTipsContent">
         <div class="tips-grid">
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">🚫</div>
-            <div class="tip-title">リンクをクリックしない</div>
-            <div class="tip-desc">メール内のリンクやボタンはクリックしないでください。</div>
+            <div class="tip-title" data-i18n="tips.link.title"></div>
+            <div class="tip-desc" data-i18n="tips.link.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">🔍</div>
-            <div class="tip-title">公式サイトを確認</div>
-            <div class="tip-desc">検索エンジンで公式サイトを探し、お知らせページをチェックしてください。</div>
+            <div class="tip-title" data-i18n="tips.official.title"></div>
+            <div class="tip-desc" data-i18n="tips.official.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">🌐</div>
-            <div class="tip-title">直接ログイン</div>
-            <div class="tip-desc">ブラウザーで公式サイトに直接アクセスし、マイページから状況を確認してください。</div>
+            <div class="tip-title" data-i18n="tips.login.title"></div>
+            <div class="tip-desc" data-i18n="tips.login.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">📞</div>
-            <div class="tip-title">公式に問い合わせ</div>
-            <div class="tip-desc">不安な場合は、公式サイトに記載された電話番号に直接連絡してください。</div>
+            <div class="tip-title" data-i18n="tips.contact.title"></div>
+            <div class="tip-desc" data-i18n="tips.contact.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">🔒</div>
-            <div class="tip-title">個人情報を入力しない</div>
-            <div class="tip-desc">パスワードやクレジットカード情報を求められても入力しないでください。</div>
+            <div class="tip-title" data-i18n="tips.secret.title"></div>
+            <div class="tip-desc" data-i18n="tips.secret.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">⏰</div>
-            <div class="tip-title">焦らず冷静に</div>
-            <div class="tip-desc">「今すぐ」「至急」などの言葉に焦らされず、一度冷静になって考えましょう。</div>
+            <div class="tip-title" data-i18n="tips.calm.title"></div>
+            <div class="tip-desc" data-i18n="tips.calm.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">🐦</div>
-            <div class="tip-title">SNSで検索</div>
-            <div class="tip-desc">Xで同様のメッセージについての報告がないか検索してみましょう。</div>
+            <div class="tip-title" data-i18n="tips.search.title"></div>
+            <div class="tip-desc" data-i18n="tips.search.desc"></div>
           </div>
           <div class="tip-card">
             <div class="tip-icon" aria-hidden="true">👥</div>
-            <div class="tip-title">詳しい人に相談</div>
-            <div class="tip-desc">コンピューターに詳しい友人や家族に相談してからアクションしてください。</div>
+            <div class="tip-title" data-i18n="tips.ask.title"></div>
+            <div class="tip-desc" data-i18n="tips.ask.desc"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <p class="limits">
-      このスコアは、本文に出てくる語を辞書と照合しただけの目安です。
-      送信元・ヘッダー・リンク先は見ていません。スコアが低くても詐欺のことはあります。
-    </p>
+    <p class="limits" data-i18n="limits"></p>
   </div>
 
   <footer>
     <div class="footer">
-      🔗 GitHubリポジトリーはこちら（<a href="https://github.com/ipusiron/emotion-based-scam-detector" target="_blank" rel="noopener noreferrer">ipusiron/emotion-based-scam-detector</a>）
+      🔗 <a href="https://github.com/ipusiron/emotion-based-scam-detector" target="_blank" rel="noopener noreferrer" data-i18n="footer.text"></a>
     </div>
   </footer>
 
