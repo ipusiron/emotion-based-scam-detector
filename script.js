@@ -18,6 +18,9 @@
   /** 解析に使う辞書。読み込みが終わるまでは空にしておく。 */
   var dictionary = null;
 
+  /** 直前に読み込んだサンプルのキー。入力欄が書き換えられたら忘れる。 */
+  var loadedSample = null;
+
   /**
    * id から要素を引く。
    * @param {string} id
@@ -105,6 +108,24 @@
   }
 
   /**
+   * 読み込んだサンプルが正規のものだったときに、その旨を画面に出す。
+   *
+   * 入力欄が書き換えられていたら、もうそのサンプルではないので何も出さない。
+   *
+   * @param {string} text いま解析した本文
+   * @param {string} level 判定の段階
+   */
+  function updateSampleNotice(text, level) {
+    var notice = byId('sampleNotice');
+    var sample = loadedSample ? SAMPLES[loadedSample] : null;
+    var show = sample && sample.kind === 'legit' && sample.text === text;
+    notice.textContent = show
+      ? t(level === 'veryLow' ? 'sample.legit.zero' : 'sample.legit.notice')
+      : '';
+    notice.hidden = !show;
+  }
+
+  /**
    * カテゴリーの内訳を、画面に出す1行の文にする。
    * @param {{distinct: number, occurrences: number}} bucket
    * @returns {string}
@@ -138,6 +159,7 @@
     var result = Core.analyze(text, dictionary);
 
     byId('result').hidden = false;
+    updateSampleNotice(text, result.level);
     byId('totalScore').textContent = String(result.total);
 
     var badge = byId('riskBadge');
@@ -177,13 +199,15 @@
    */
   function loadSample(key) {
     if (!Object.prototype.hasOwnProperty.call(SAMPLES, key)) return;
-    byId('inputText').value = SAMPLES[key];
+    byId('inputText').value = SAMPLES[key].text;
+    loadedSample = key;
     byId('result').hidden = true;
   }
 
   /** 入力欄と結果を消す。 */
   function clearInput() {
     byId('inputText').value = '';
+    loadedSample = null;
     byId('result').hidden = true;
     byId('presetSelect').value = '';
   }

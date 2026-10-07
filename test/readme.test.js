@@ -94,12 +94,14 @@ test('サンプルのスコアの表が、実際の計算と一致する', () =>
   const rows = [...readme.matchAll(/^\| ([^|]+) \| (\d+) \| (\d+) \| (\d+) \| (\d+) \| (\S+リスク) \|$/gm)];
   assert.equal(rows.length, Object.keys(SAMPLES).length,
     `表の行が ${rows.length} 行（サンプルは ${Object.keys(SAMPLES).length} 件）`);
+  // 詐欺と正規の両方が表に載っていること
+  assert.ok(rows.length >= 14, '表の行が足りない');
   const label = {
     high: '高リスク', medium: '中リスク', low: '低リスク', veryLow: '極小リスク'
   };
   const byTotal = {};
   for (const key of Object.keys(SAMPLES)) {
-    const r = C.analyze(SAMPLES[key], DICT);
+    const r = C.analyze(SAMPLES[key].text, DICT);
     byTotal[`${r.categories.emergency.score}/${r.categories.fear.score}`
       + `/${r.categories.greed.score}/${r.total}`] = label[r.level];
   }

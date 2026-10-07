@@ -70,6 +70,9 @@
   --error-bg: #fdecec;
   --error-fg: #8a1c24;
   --error-border: #c82333;
+  --info-bg: #e7f1ff;
+  --info-fg: #0a3d7a;
+  --info-border: #0a58ca;
 }
 
 *, *::before, *::after {
@@ -533,6 +536,14 @@ footer {
   color: var(--error-fg);
 }
 
+/* 正規のメッセージのサンプルを解析したときの案内 */
+.notice-legit {
+  border-left-color: var(--info-border);
+  background-color: var(--info-bg);
+  color: var(--info-fg);
+  line-height: 1.7;
+}
+
 /* カテゴリーごとの内訳（種類と回数）。2段目に回して狭い画面でも折り返さない */
 .score-detail {
   grid-column: 1 / -1;
@@ -764,5 +775,8 @@ button:disabled {
     --error-bg: #2a1518;
     --error-fg: #ffb3ba;
     --error-border: #ff8a95;
+    --info-bg: #11213a;
+    --info-fg: #b6d4fe;
+    --info-border: #6ea8fe;
   }
 }

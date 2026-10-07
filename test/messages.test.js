@@ -23,6 +23,18 @@ test('画面が呼ぶキーが、すべて辞書にある', () => {
   }
 });
 
+test('文言のキーらしい文字列は、すべて辞書にある', () => {
+  // t() の引数が三項演算子などで組み立てられていても拾えるように、
+  // 既知の前置きで始まる文字列はすべてキーとみなす
+  const PREFIX = /^(risk|category|detail|dictionary|radar|result|sample)\./;
+  for (const m of script.matchAll(/'([\w.]+)'/g)) {
+    if (!PREFIX.test(m[1])) continue;
+    // 'risk.' のように組み立ての途中で切れたものは除く
+    if (m[1].endsWith('.')) continue;
+    assert.ok(Object.prototype.hasOwnProperty.call(M.MESSAGES, m[1]), `${m[1]} が辞書にない`);
+  }
+});
+
 test('辞書の値が空でない', () => {
   for (const [key, value] of Object.entries(M.MESSAGES)) {
     assert.equal(typeof value, 'string', key);

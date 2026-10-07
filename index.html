@@ -42,6 +42,13 @@
       <optgroup label="English Sample">
         <option value="phishing_en">Phishing (Account Security)</option>
       </optgroup>
+      <optgroup label="正規のメッセージ（誤検出の例）">
+        <option value="legit_delivery_jp">正規の配送通知</option>
+        <option value="legit_bank_jp">正規の銀行からのお知らせ</option>
+        <option value="legit_work_jp">正規の社内リマインド</option>
+        <option value="legit_campaign_jp">正規のキャンペーン案内</option>
+        <option value="legit_signin_en">Legitimate sign-in alert</option>
+      </optgroup>
     </select>
   </div>
 
@@ -56,6 +63,8 @@
 
   <div id="result" hidden>
     <h2>解析結果</h2>
+
+    <p id="sampleNotice" class="notice notice-legit" role="status" hidden></p>
 
     <div class="result-container">
       <div class="result-left">
