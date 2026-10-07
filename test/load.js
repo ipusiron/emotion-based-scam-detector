@@ -1,0 +1,21 @@
+// 画面と同じ通常のスクリプト（js/*.js）を、テストの実行環境に読み込む。
+// vm.runInThisContext で読むので、結果のオブジェクトはテスト側と同じ realm になる。
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+export const read = (f) => fs.readFileSync(new URL(`../${f}`, import.meta.url), 'utf8');
+
+export const readJson = (f) => JSON.parse(read(f));
+
+const loaded = new Set();
+export function load(file) {
+  if (!loaded.has(file)) {
+    vm.runInThisContext(read(file), { filename: file });
+    loaded.add(file);
+  }
+  return globalThis;
+}
+
+export const core = () => load('js/scam-core.js').ScamCore;
+export const dictionary = () => load('js/dictionary.js').SCAM_DICTIONARY;
+export const messages = () => load('js/messages.js').ScamMessages;
