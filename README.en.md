@@ -325,9 +325,11 @@ emotion-based-scam-detector/
 │   ├── radar.js            # Radar chart drawn as SVG
 │   ├── messages.js         # Every interface string, in Japanese and English
 │   ├── dictionary.js       # Built-in copy of the dictionary (used under file://)
+│   ├── principles.js       # Built-in copy of the tactic groups (used under file://)
 │   └── samples.js          # The 14 sample messages
 ├── data/                   # Data you are meant to edit
-│   └── dictionary.json     # Trigger word dictionary (167 terms)
+│   ├── dictionary.json     # Trigger word dictionary (167 terms)
+│   └── principles.json     # 14 tactic groups and the principle each one uses
 ├── assets/                 # Images
 │   ├── screenshot.png      # Main view (light)
 │   ├── screenshot2.png     # Highlighted message
@@ -341,6 +343,7 @@ emotion-based-scam-detector/
 │   ├── scam-core.test.js   # Matching and scoring
 │   ├── radar.test.js       # Radar vertices and viewBox
 │   ├── dictionary.test.js  # Dictionary contents and the two copies agreeing
+│   ├── principles.test.js  # Group coverage and principle assignment
 │   ├── samples.test.js     # Sample scores
 │   ├── messages.test.js    # Interface strings
 │   ├── i18n.test.js        # Japanese and English staying in step

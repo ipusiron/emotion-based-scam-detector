@@ -19,3 +19,4 @@ export function load(file) {
 export const core = () => load('js/scam-core.js').ScamCore;
 export const dictionary = () => load('js/dictionary.js').SCAM_DICTIONARY;
 export const messages = () => load('js/messages.js').ScamMessages;
+export const principles = () => load('js/principles.js').SCAM_PRINCIPLES;

@@ -366,9 +366,11 @@ emotion-based-scam-detector/
 │   ├── radar.js            # レーダーチャートのSVG描画
 │   ├── messages.js         # 画面に出す文言の辞書（日本語と英語）
 │   ├── dictionary.js       # トリガーワード辞書の内蔵の控え（file://用）
+│   ├── principles.js       # 手口のまとまりと説得の原理の内蔵の控え（file://用）
 │   └── samples.js          # サンプルメッセージ9種
 ├── data/                   # 編集して使うデータ
-│   └── dictionary.json     # トリガーワード辞書（167語）
+│   ├── dictionary.json     # トリガーワード辞書（167語）
+│   └── principles.json     # 手口のまとまり14種と、割り当てた説得の原理
 ├── assets/                 # 画像
 │   ├── screenshot.png      # 代表画面（ライト）
 │   ├── screenshot2.png     # 本文のハイライト
@@ -382,6 +384,7 @@ emotion-based-scam-detector/
 │   ├── scam-core.test.js   # 照合と採点の検証
 │   ├── radar.test.js       # レーダーの頂点とviewBoxの検証
 │   ├── dictionary.test.js  # 辞書の中身と、2つの辞書の一致の検証
+│   ├── principles.test.js  # まとまりの網羅と原理の割り当ての検証
 │   ├── samples.test.js     # サンプルのスコアの検証
 │   ├── messages.test.js    # 文言の辞書の検証
 │   ├── i18n.test.js        # 日本語と英語がそろっていることの検証
