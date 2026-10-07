@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { core, dictionary, load, read } from './load.js';
+import { core, dictionary, load, messages, principles, read } from './load.js';
 
 const C = core();
 const DICT = dictionary();
@@ -122,6 +122,31 @@ test('サンプルのスコアの表が、実際の計算と一致する', () =>
     assert.ok(key in byTotal, `表の行「${row[1].trim()}」に合うサンプルがない（${key}）`);
     assert.equal(row[6], byTotal[key], `「${row[1].trim()}」の判定が合わない`);
   }
+});
+
+test('説得の原理の表が、まとまりの表と一致する', () => {
+  const P = principles();
+  const M = messages();
+  const en = read('README.en.md');
+  for (const [lang, text] of [['ja', readme], ['en', en]]) {
+    M.setLanguage(lang);
+    for (const [id, group] of Object.entries(P.groups)) {
+      const row = `| ${M.t('group.' + id + '.label')} | `
+        + `${M.t('principle.' + group.principle + '.label')} | ${group.words.length} |`;
+      assert.ok(text.includes(row), `${lang}: 「${row}」が表にない`);
+    }
+  }
+  M.setLanguage('ja');
+});
+
+test('見つからない原理の記述が、まとまりの表と合っている', () => {
+  const P = principles();
+  const used = new Set(Object.values(P.groups).map((g) => g.principle));
+  const missing = C.PRINCIPLES.filter((p) => !used.has(p));
+  // いまは社会的証明だけが欠けている。辞書を広げたらREADMEも直す
+  assert.deepEqual(missing, ['socialProof']);
+  assert.ok(readme.includes('この辞書には、社会的証明にあたる語がありません'));
+  assert.ok(read('README.en.md').includes('This dictionary holds no term for social proof'));
 });
 
 test('しきい値の表が、コードのしきい値と一致する', () => {
