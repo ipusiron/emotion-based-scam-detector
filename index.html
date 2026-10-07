@@ -127,7 +127,14 @@
     </div>
 
     <h3 class="output-heading" data-i18n="output.heading"></h3>
+    <p class="hint" data-i18n="panel.word.hint"></p>
     <div id="highlightedText" class="text-output"></div>
+
+    <section class="principles" id="principlesPanel" hidden>
+      <h3 data-i18n="panel.principles.heading"></h3>
+      <div id="principlesList"></div>
+      <p class="principles-absent" id="principlesAbsent" hidden></p>
+    </section>
 
     <div class="safety-tips">
       <button class="accordion-header" id="safetyTipsToggle" type="button" aria-expanded="false" aria-controls="safetyTipsContent">
@@ -190,6 +197,7 @@
   </footer>
 
   <script src="js/dictionary.js"></script>
+  <script src="js/principles.js"></script>
   <script src="js/samples.js"></script>
   <script src="js/messages.js"></script>
   <script src="js/scam-core.js"></script>

@@ -376,23 +376,32 @@
   }
 
   /**
-   * 本文全体をエスケープしてから、一致箇所だけを span で包む。
+   * 本文全体をエスケープしてから、一致箇所だけを包む。
    *
    * 先に全文をエスケープするので、入力に含まれるタグが
    * そのまま画面の組み立てに混ざることはない。
    *
+   * 手口のまとまりがわかっている語はボタンにする（押すと解説を出せる）。
+   * わからない語は span のままにして、押せる要素を増やさない。
+   *
    * @param {string} text 本文
-   * @param {{start: number, end: number, category: string}[]} spans findSpans の結果
+   * @param {{start: number, end: number, category: string, group?: string}[]} spans findSpans の結果
    * @returns {string} 画面に入れる HTML
    */
   function highlightHtml(text, spans) {
     var out = '';
     var pos = 0;
-    (spans || []).forEach(function (span) {
+    (spans || []).forEach(function (span, index) {
       out += escapeHtml(text.slice(pos, span.start));
-      out += '<span class="highlight ' + escapeHtml(span.category) + '">'
-        + escapeHtml(text.slice(span.start, span.end))
-        + '</span>';
+      var body = escapeHtml(text.slice(span.start, span.end));
+      var klass = 'highlight ' + escapeHtml(span.category);
+      if (span.group) {
+        out += '<button type="button" class="' + klass + '"'
+          + ' data-index="' + index + '"'
+          + ' data-group="' + escapeHtml(span.group) + '">' + body + '</button>';
+      } else {
+        out += '<span class="' + klass + '">' + body + '</span>';
+      }
       pos = span.end;
     });
     out += escapeHtml(text.slice(pos));

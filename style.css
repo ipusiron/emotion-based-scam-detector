@@ -800,3 +800,130 @@ button:disabled {
     --info-border: #6ea8fe;
   }
 }
+
+/* ハイライトした語は、手口がわかるものだけ押せるボタンにする */
+button.highlight {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 2px 4px;
+  border: none;
+  border-radius: 3px;
+  font: inherit;
+  font-weight: 600;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+button.highlight:hover {
+  outline: 2px solid var(--fg);
+  outline-offset: 0;
+}
+
+/* 使われている説得の原理 */
+.hint {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.principles {
+  margin-bottom: 2rem;
+}
+
+.principles h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.principle {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--surface);
+}
+
+.principle-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.principle-count {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.principle-desc {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.tactic {
+  margin-top: 0.5rem;
+  border-left: 3px solid var(--border-strong);
+  padding-left: 0.75rem;
+}
+
+.tactic.selected {
+  border-left-color: var(--link);
+}
+
+.tactic summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+}
+
+/* display: flex にすると既定の三角が消えるので、自前で出す */
+.tactic summary::-webkit-details-marker {
+  display: none;
+}
+
+.tactic summary::before {
+  content: "▶";
+  color: var(--muted);
+  font-size: 0.7em;
+}
+
+.tactic[open] summary::before {
+  content: "▼";
+}
+
+.tactic-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.tactic-words {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.tactic-why,
+.tactic-caution {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.tactic-caution {
+  color: var(--muted);
+}
+
+.principles-absent {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}

@@ -107,3 +107,33 @@ test('まとまりの数と名前は決まっている', () => {
     'profit', 'guarantee', 'money'
   ]);
 });
+
+test('手口がわかる語はボタンに、わからない語はspanになる', () => {
+  const withTable = C.analyze('至急', DICT, JSON_P);
+  const html = C.highlightHtml('至急', withTable.spans);
+  assert.equal(html,
+    '<button type="button" class="highlight emergency" data-index="0" data-group="immediacy">至急</button>');
+
+  const without = C.analyze('至急', DICT);
+  assert.equal(C.highlightHtml('至急', without.spans),
+    '<span class="highlight emergency">至急</span>');
+});
+
+test('ボタンにしても、入力のタグは混ざらない', () => {
+  const evil = '<img src=x onerror=alert(1)>至急';
+  const html = C.highlightHtml(evil, C.analyze(evil, DICT, JSON_P).spans);
+  assert.ok(!html.includes('<img'), '入力のタグがそのまま残っている');
+  assert.ok(html.includes('&lt;img src=x onerror=alert(1)&gt;'));
+  assert.ok(html.includes('<button type="button"'));
+});
+
+test('data-group の値は、まとまりのキーだけになる', () => {
+  const ids = Object.keys(JSON_P.groups);
+  const text = Object.values(DICT).flat().join('。');
+  const html = C.highlightHtml(text, C.analyze(text, DICT, JSON_P).spans);
+  for (const m of html.matchAll(/data-group="([^"]*)"/g)) {
+    assert.ok(ids.includes(m[1]), `知らないまとまり: ${m[1]}`);
+  }
+  // 辞書の全語が押せるようになっている
+  assert.equal([...html.matchAll(/data-group="/g)].length, 167);
+});
