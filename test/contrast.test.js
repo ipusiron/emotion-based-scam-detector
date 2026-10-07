@@ -78,7 +78,9 @@ const PAIRS = [
   ['--radar-label', '--surface'],
   ['--notice-fg', '--notice-bg'],
   ['--error-fg', '--error-bg'],
-  ['--info-fg', '--info-bg']
+  ['--info-fg', '--info-bg'],
+  ['--link', '--surface'],
+  ['--link', '--legend-bg']
 ];
 
 for (const [theme, table] of [['ライト', LIGHT], ['ダーク', DARK]]) {

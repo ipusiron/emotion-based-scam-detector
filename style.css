@@ -511,6 +511,26 @@ footer {
 .footer a:hover {
   text-decoration: underline;
 }
+/* 言語の切り替え */
+.lang-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.lang-toggle {
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  background-color: var(--surface);
+  color: var(--link);
+  border: 1px solid var(--link);
+}
+
+.lang-toggle:hover {
+  background-color: var(--legend-bg);
+}
+
 /* 入力欄の見出しと、辞書の状態のお知らせ */
 .input-label {
   display: block;

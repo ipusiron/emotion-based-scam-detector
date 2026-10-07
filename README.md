@@ -37,6 +37,8 @@ hub: true
 ---
 -->
 
+[English](README.en.md) · 日本語
+
 # Emotion-Based Scam Detector - メッセージの感情トリガー検出ツール
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/ipusiron/emotion-based-scam-detector?style=social)
@@ -87,6 +89,7 @@ Emotion-Based Scam Detectorは、メールやチャットの文章に潜む「�
 - 偽陽性の体験：正規のサンプルを解析すると、正規の通知にも同じ語が使われることを示す説明が出る
 - 対処法ガイド：詐欺メッセージへの8つの対処法をアコーディオンで示す
 - 辞書のカスタマイズ：`data/dictionary.json`を編集して語を足せる
+- 日英対応：画面の文言を日本語と英語で切り替える。選んだ言語は次に開いたときも保たれる
 - ダークモード：OSの設定に合わせて配色が切り替わる
 - オフライン動作：外部への通信をいっさい行わない。一度読み込めばネットワークがなくても使える
 
@@ -343,6 +346,8 @@ Node.js 22以上で動きます。依存パッケージはありません（`nod
 - サンプル：9種類のプリセットのスコアと判定（本READMEの表と同じ値）
 - HTML：CSPの内容、外部の読み込みがないこと、インラインのハンドラーとstyle属性がないこと、要素のid
 - 配色：ライトとダークの両方で、文字と背景のコントラスト比が4.5:1以上であること
+- 画面の文言：日本語と英語のキーが一致すること、英語の辞書に日本語が残っていないこと、
+  2つのREADMEの見出しが対応していること
 - 書式：行の長さ、表記のゆれ、日本語と英数字の間の空白
 
 GitHub Actionsで、pushとpull requestのたびに自動で実行されます。
@@ -359,7 +364,7 @@ emotion-based-scam-detector/
 ├── js/                     # 画面から読み込むスクリプト
 │   ├── scam-core.js        # 照合と採点（DOMに触れない）
 │   ├── radar.js            # レーダーチャートのSVG描画
-│   ├── messages.js         # 画面に出す文言の辞書
+│   ├── messages.js         # 画面に出す文言の辞書（日本語と英語）
 │   ├── dictionary.js       # トリガーワード辞書の内蔵の控え（file://用）
 │   └── samples.js          # サンプルメッセージ9種
 ├── data/                   # 編集して使うデータ
@@ -367,7 +372,11 @@ emotion-based-scam-detector/
 ├── assets/                 # 画像
 │   ├── screenshot.png      # 代表画面（ライト）
 │   ├── screenshot2.png     # 本文のハイライト
-│   └── screenshot3.png     # スコアとレーダー（ダーク）
+│   ├── screenshot3.png     # スコアとレーダー（ダーク）
+│   └── en/                 # 英語表示の同じ画面
+│       ├── screenshot.png  # 代表画面（ライト）
+│       ├── screenshot2.png # 本文のハイライト
+│       └── screenshot3.png # スコアとレーダー（ダーク）
 ├── test/                   # 自動テスト（node --test）
 │   ├── load.js             # 画面のスクリプトをテストから読み込む補助
 │   ├── scam-core.test.js   # 照合と採点の検証
@@ -375,6 +384,7 @@ emotion-based-scam-detector/
 │   ├── dictionary.test.js  # 辞書の中身と、2つの辞書の一致の検証
 │   ├── samples.test.js     # サンプルのスコアの検証
 │   ├── messages.test.js    # 文言の辞書の検証
+│   ├── i18n.test.js        # 日本語と英語がそろっていることの検証
 │   ├── readme.test.js      # READMEの表・語数・構造の検証
 │   ├── html.test.js        # index.htmlの静的な検証
 │   ├── contrast.test.js    # 配色のコントラスト比の検証
@@ -387,6 +397,7 @@ emotion-based-scam-detector/
 ├── .nojekyll               # GitHub PagesでJekyllを使わない印
 ├── CLAUDE.md               # Claude Code向けの案内
 ├── README.md               # 本ファイル
+├── README.en.md            # 英語版のREADME
 └── LICENSE                 # MITライセンス
 ```
 

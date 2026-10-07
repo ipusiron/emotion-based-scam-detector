@@ -3,23 +3,38 @@
  *
  * 辞書は data/dictionary.json を読む。file:// で開いたときは fetch が使えないので、
  * js/dictionary.js の内蔵の控えに切り替えて、そのことを画面に出す。
+ *
+ * 表示する言語は、?lang= → 保存した選択 → ブラウザーの言語 の順で決める。
  */
 (function (global) {
   'use strict';
 
   var Core = global.ScamCore;
   var Radar = global.ScamRadar;
-  var t = global.ScamMessages.t;
+  var M = global.ScamMessages;
+  var t = M.t;
   var SAMPLES = global.SCAM_SAMPLES || {};
 
   /** 画面に出すカテゴリーの並びと、対応する要素の id の前置き。 */
   var CATEGORIES = ['emergency', 'fear', 'greed'];
+
+  /** 選んだ言語を覚えておくキー。 */
+  var LANG_STORAGE_KEY = 'scam-detector-lang';
 
   /** 解析に使う辞書。読み込みが終わるまでは空にしておく。 */
   var dictionary = null;
 
   /** 直前に読み込んだサンプルのキー。入力欄が書き換えられたら忘れる。 */
   var loadedSample = null;
+
+  /** 直前の解析の結果。言語を切り替えたときに描き直すために持つ。 */
+  var lastAnalysis = null;
+
+  /** 辞書について出しているお知らせのキー。言語の切り替えで出し直す。 */
+  var dictionaryNoticeKey = null;
+
+  /** そのお知らせをエラーとして見せているか。 */
+  var dictionaryNoticeIsError = false;
 
   /**
    * id から要素を引く。
@@ -31,16 +46,96 @@
   }
 
   /**
-   * 画面の上部にひとこと出す。
-   * @param {string} text 本文。空文字なら隠す
-   * @param {boolean} isError エラーとして見せるか
+   * localStorage を使う。使えない設定でも画面が止まらないように包む。
+   * @param {function(Storage): *} fn
+   * @returns {*}
    */
-  function showNotice(text, isError) {
+  function withStorage(fn) {
+    try {
+      return fn(global.localStorage);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * 表示する言語を決める。
+   * ?lang= → 保存した選択 → ブラウザーの言語 → 既定、の順に見る。
+   * @returns {string}
+   */
+  function resolveLanguage() {
+    var supported = M.LANGUAGES;
+    var match = /[?&]lang=([a-zA-Z-]+)/.exec(global.location.search || '');
+    if (match && supported.indexOf(match[1].toLowerCase()) !== -1) return match[1].toLowerCase();
+
+    var saved = withStorage(function (store) { return store.getItem(LANG_STORAGE_KEY); });
+    if (supported.indexOf(saved) !== -1) return saved;
+
+    var nav = ((global.navigator && global.navigator.language) || '').toLowerCase();
+    return nav.indexOf('ja') === 0 ? 'ja' : 'en';
+  }
+
+  /**
+   * data-i18n 系の属性を見て、画面の文言を入れ替える。
+   */
+  function applyTranslations() {
+    var doc = global.document;
+    doc.documentElement.lang = M.getLanguage();
+    doc.title = t('app.title');
+
+    var description = byId('pageDescription');
+    if (description) description.setAttribute('content', t('app.description'));
+
+    var i;
+    var nodes = doc.querySelectorAll('[data-i18n]');
+    for (i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = t(nodes[i].getAttribute('data-i18n'));
+    }
+    var placeholders = doc.querySelectorAll('[data-i18n-placeholder]');
+    for (i = 0; i < placeholders.length; i++) {
+      placeholders[i].setAttribute('placeholder',
+        t(placeholders[i].getAttribute('data-i18n-placeholder')));
+    }
+    var labels = doc.querySelectorAll('[data-i18n-label]');
+    for (i = 0; i < labels.length; i++) {
+      labels[i].setAttribute('aria-label', t(labels[i].getAttribute('data-i18n-label')));
+    }
+    var groups = doc.querySelectorAll('[data-i18n-optgroup]');
+    for (i = 0; i < groups.length; i++) {
+      groups[i].setAttribute('label', t(groups[i].getAttribute('data-i18n-optgroup')));
+    }
+  }
+
+  /**
+   * 辞書についてのお知らせを出す。キーを覚えておき、言語の切り替えで出し直す。
+   * @param {string|null} key 文言のキー。null なら隠す
+   * @param {boolean} [isError] エラーとして見せるか
+   */
+  function showNotice(key, isError) {
     var notice = byId('dictionaryNotice');
     if (!notice) return;
-    notice.textContent = text || '';
+    dictionaryNoticeKey = key;
+    dictionaryNoticeIsError = !!isError;
+    notice.textContent = key ? t(key) : '';
     notice.className = isError ? 'notice notice-error' : 'notice';
-    notice.hidden = !text;
+    notice.hidden = !key;
+  }
+
+  /**
+   * 言語を切り替えて、画面を描き直す。
+   * @param {string} lang
+   * @param {boolean} [remember] 選択を保存するか
+   */
+  function changeLanguage(lang, remember) {
+    M.setLanguage(lang);
+    if (remember) {
+      withStorage(function (store) {
+        return store.setItem(LANG_STORAGE_KEY, M.getLanguage());
+      });
+    }
+    applyTranslations();
+    if (dictionaryNoticeKey) showNotice(dictionaryNoticeKey, dictionaryNoticeIsError);
+    if (lastAnalysis) renderResult(lastAnalysis.text, lastAnalysis.result);
   }
 
   /**
@@ -73,18 +168,18 @@
   function loadDictionary() {
     var builtIn = global.SCAM_DICTIONARY;
 
-    function fallBack(message) {
+    function fallBack(key) {
       if (adoptDictionary(builtIn)) {
         setAnalyzeEnabled(true);
-        if (message) showNotice(message, false);
+        showNotice(key || null, false);
       } else {
         setAnalyzeEnabled(false);
-        showNotice(t('dictionary.broken'), true);
+        showNotice('dictionary.broken', true);
       }
     }
 
     if (global.location && global.location.protocol === 'file:') {
-      fallBack(t('dictionary.fallback'));
+      fallBack('dictionary.fallback');
       return;
     }
 
@@ -97,13 +192,13 @@
       .then(function (data) {
         if (adoptDictionary(data)) {
           setAnalyzeEnabled(true);
-          showNotice('', false);
+          showNotice(null, false);
         } else {
-          fallBack(t('dictionary.invalid'));
+          fallBack('dictionary.invalid');
         }
       })
       .catch(function () {
-        fallBack(t('dictionary.fallback'));
+        fallBack('dictionary.fallback');
       });
   }
 
@@ -151,13 +246,12 @@
     return t('radar.desc', { summary: items.join(t('radar.separator')) });
   }
 
-  /** 入力された本文を解析して、画面を更新する。 */
-  function analyze() {
-    if (!dictionary) return;
-
-    var text = byId('inputText').value;
-    var result = Core.analyze(text, dictionary);
-
+  /**
+   * 解析の結果を画面に描く。言語を切り替えたときも、同じ結果でここを呼び直す。
+   * @param {string} text 解析した本文
+   * @param {Object} result Core.analyze の結果
+   */
+  function renderResult(text, result) {
     byId('result').hidden = false;
     updateSampleNotice(text, result.level);
     byId('totalScore').textContent = String(result.total);
@@ -193,6 +287,15 @@
     });
   }
 
+  /** 入力された本文を解析して、画面を更新する。 */
+  function analyze() {
+    if (!dictionary) return;
+    var text = byId('inputText').value;
+    var result = Core.analyze(text, dictionary);
+    lastAnalysis = { text: text, result: result };
+    renderResult(text, result);
+  }
+
   /**
    * サンプル本文を入力欄に読み込む。
    * @param {string} key SCAM_SAMPLES のキー
@@ -201,6 +304,7 @@
     if (!Object.prototype.hasOwnProperty.call(SAMPLES, key)) return;
     byId('inputText').value = SAMPLES[key].text;
     loadedSample = key;
+    lastAnalysis = null;
     byId('result').hidden = true;
   }
 
@@ -208,6 +312,7 @@
   function clearInput() {
     byId('inputText').value = '';
     loadedSample = null;
+    lastAnalysis = null;
     byId('result').hidden = true;
     byId('presetSelect').value = '';
   }
@@ -223,10 +328,17 @@
   }
 
   global.document.addEventListener('DOMContentLoaded', function () {
+    changeLanguage(resolveLanguage(), false);
     loadDictionary();
 
     byId('analyzeBtn').addEventListener('click', analyze);
     byId('clearBtn').addEventListener('click', clearInput);
+
+    byId('langToggle').addEventListener('click', function () {
+      var languages = M.LANGUAGES;
+      var next = languages[(languages.indexOf(M.getLanguage()) + 1) % languages.length];
+      changeLanguage(next, true);
+    });
 
     byId('presetSelect').addEventListener('change', function (event) {
       var key = event.target.value;
