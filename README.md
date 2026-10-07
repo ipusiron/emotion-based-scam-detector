@@ -37,7 +37,7 @@ hub: true
 ---
 -->
 
-# Emotion‑Based Scam Detector - メッセージの感情トリガー検出ツール
+# Emotion-Based Scam Detector - メッセージの感情トリガー検出ツール
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/ipusiron/emotion-based-scam-detector?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/ipusiron/emotion-based-scam-detector?style=social)
@@ -47,7 +47,7 @@ hub: true
 
 **Day081 - 生成AIで作るセキュリティツール100**
 
-**Emotion‑Based Scam Detector** は、メールやチャットなどの文章に潜む「緊急性」「恐怖」「誘惑」といった感情を刺激するキーワードを検出するツールです。
+**Emotion-Based Scam Detector** は、メールやチャットなどの文章に潜む「緊急性」「恐怖」「誘惑」といった感情を刺激するキーワードを検出するツールです。
 
 とくにフィッシングメールや詐欺メッセージでは感情を揺さぶるようなキーワードがよく使われていますが、この事実を逆手に取ることで注意すべきメッセージかどうかを判定できます。
 
@@ -133,9 +133,9 @@ hub: true
 
 ## 📛 名前の由来
 
-プロジェクト名 **「Emotion‑Based Scam Detector」** は以下の要素から成り立っています。
+プロジェクト名 **「Emotion-Based Scam Detector」** は以下の要素から成り立っています。
 
-- **Emotion‑Based**: 詐欺メッセージがしばしば利用する「緊急」「恐怖」「誘惑」といった**感情的なトリガー**に着目したツールであることを示します。  
+- **Emotion-Based**: 詐欺メッセージがしばしば利用する「緊急」「恐怖」「誘惑」といった**感情的なトリガー**に着目したツールであることを示します。  
 - **Scam**: フィッシングや詐欺など、**悪意あるコミュニケーション**を対象としていることを明示します。  
 - **Detector**: 単なる可視化ではなく、怪しい表現を**検出する機能**を持つツールであることを示します。  
 

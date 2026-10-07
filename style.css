@@ -1,17 +1,95 @@
-/* Basic styling for the Emotion‑Based Scam Detector */
+/* Basic styling for the Emotion-Based Scam Detector */
+
+/* 配色はここにまとめる。ダークは下の @media で同じ名前を上書きする。
+   文字と面の組み合わせは、すべて 4.5:1 以上になるように選んである
+   （検証は test/contrast.test.js）。 */
+:root {
+  color-scheme: light dark;
+
+  --bg: #ffffff;
+  --fg: #333333;
+  --muted: #666666;
+  --surface: #ffffff;
+  --border: #dddddd;
+  --border-strong: #cccccc;
+  --rule: #eeeeee;
+
+  --link: #0a58ca;
+  --accent: #157347;
+  --accent-hover: #10603a;
+  --accent-fg: #ffffff;
+  --secondary: #6c757d;
+  --secondary-hover: #5a6268;
+  --secondary-fg: #ffffff;
+
+  --summary-from: #434190;
+  --summary-to: #4a2d7a;
+  --summary-fg: #ffffff;
+  --summary-inner: rgba(255, 255, 255, 0.2);
+
+  --legend-bg: #f8f9fa;
+  --presets-bg: #fff9e6;
+  --output-bg: #fafafa;
+  --track: #e9ecef;
+  --tips-from: #f5f7fa;
+  --tips-to: #c3cfe2;
+  --tips-head: rgba(255, 255, 255, 0.5);
+  --tips-head-hover: rgba(255, 255, 255, 0.75);
+
+  --emergency-bg: #ffc107;
+  --emergency-fg: #000000;
+  --fear-bg: #dc3545;
+  --fear-fg: #ffffff;
+  --greed-bg: #157347;
+  --greed-fg: #ffffff;
+
+  --badge-very-low: #157347;
+  --badge-low: #2f7d32;
+  --badge-medium: #b35900;
+  --badge-high: #dc3545;
+  --badge-fg: #ffffff;
+
+  --radar-grid: #d7dbe0;
+  --radar-axis: #c3c9d0;
+  --radar-tick: #6b7280;
+  --radar-label: #333333;
+  --radar-threshold: #b02a37;
+  --radar-shape: #0a58ca;
+  --radar-shape-fill: rgba(10, 88, 202, 0.18);
+
+  --fill-emergency-from: #ffc107;
+  --fill-emergency-to: #ff9800;
+  --fill-fear-from: #dc3545;
+  --fill-fear-to: #c82333;
+  --fill-greed-from: #1a9655;
+  --fill-greed-to: #157347;
+
+  --notice-bg: #fff8e1;
+  --notice-fg: #5b4300;
+  --notice-border: #e0b400;
+  --error-bg: #fdecec;
+  --error-fg: #8a1c24;
+  --error-border: #c82333;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
   line-height: 1.5;
-  color: #333;
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 header {
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border);
 }
 
 h1 {
@@ -24,7 +102,9 @@ textarea {
   height: 200px;
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  color: var(--fg);
+  background-color: var(--surface);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
   resize: vertical;
 }
@@ -34,20 +114,20 @@ button {
   margin: 0.5rem auto 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  background-color: #28a745;
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--accent-fg);
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #218838;
+  background-color: var(--accent-hover);
 }
 
 #result {
   margin-top: 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--rule);
   padding-top: 1rem;
   animation: fadeIn 0.3s ease-in;
 }
@@ -83,10 +163,10 @@ button:hover {
 }
 
 .risk-summary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--summary-from) 0%, var(--summary-to) 100%);
   border-radius: 12px;
   padding: 1.5rem;
-  color: white;
+  color: var(--summary-fg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -116,7 +196,7 @@ button:hover {
 }
 
 .risk-assessment {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--summary-inner);
   border-radius: 8px;
   padding: 1rem;
   backdrop-filter: blur(10px);
@@ -132,23 +212,23 @@ button:hover {
 }
 
 .assessment-badge.very-low {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--badge-very-low);
+  color: var(--badge-fg);
 }
 
 .assessment-badge.low {
-  background-color: #5cb85c;
-  color: white;
+  background-color: var(--badge-low);
+  color: var(--badge-fg);
 }
 
 .assessment-badge.medium {
-  background-color: #fd7e14;
-  color: white;
+  background-color: var(--badge-medium);
+  color: var(--badge-fg);
 }
 
 .assessment-badge.high {
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--badge-high);
+  color: var(--badge-fg);
 }
 
 .assessment-text {
@@ -164,9 +244,9 @@ button:hover {
 
 .category-score {
   display: grid;
-  grid-template-columns: 80px 1fr 40px;
+  grid-template-columns: 5rem 1fr 2.5rem;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.35rem 0.75rem;
 }
 
 .category-name {
@@ -176,28 +256,29 @@ button:hover {
 
 .score-bar {
   height: 24px;
-  background-color: #e9ecef;
+  background-color: var(--track);
   border-radius: 12px;
   overflow: hidden;
   position: relative;
 }
 
 .score-fill {
+  width: 0;
   height: 100%;
   transition: width 0.5s ease;
   border-radius: 12px;
 }
 
 .emergency-fill {
-  background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+  background: linear-gradient(90deg, var(--fill-emergency-from) 0%, var(--fill-emergency-to) 100%);
 }
 
 .fear-fill {
-  background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
+  background: linear-gradient(90deg, var(--fill-fear-from) 0%, var(--fill-fear-to) 100%);
 }
 
 .greed-fill {
-  background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+  background: linear-gradient(90deg, var(--fill-greed-from) 0%, var(--fill-greed-to) 100%);
 }
 
 .score-number {
@@ -215,7 +296,7 @@ button:hover {
 .chart-container {
   width: 100%;
   max-width: 350px;
-  background: white;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -223,15 +304,15 @@ button:hover {
 
 .text-output {
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: var(--output-bg);
   white-space: pre-wrap;
   margin-bottom: 2rem;
 }
 
 .safety-tips {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, var(--tips-from) 0%, var(--tips-to) 100%);
   border-radius: 12px;
   margin-top: 2rem;
   overflow: hidden;
@@ -239,12 +320,12 @@ button:hover {
 
 .accordion-header {
   width: 100%;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--tips-head);
   border: none;
   padding: 1.25rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
+  color: var(--fg);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -253,7 +334,7 @@ button:hover {
 }
 
 .accordion-header:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--tips-head-hover);
 }
 
 .accordion-icon {
@@ -284,7 +365,7 @@ button:hover {
 }
 
 .tip-card {
-  background: white;
+  background: var(--surface);
   border-radius: 8px;
   padding: 1.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -304,13 +385,13 @@ button:hover {
 .tip-title {
   font-weight: bold;
   font-size: 1rem;
-  color: #333;
+  color: var(--fg);
   margin-bottom: 0.5rem;
 }
 
 .tip-desc {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -322,26 +403,26 @@ button:hover {
 }
 
 .highlight.emergency {
-  background-color: #ffc107;
-  color: #000;
+  background-color: var(--emergency-bg);
+  color: var(--emergency-fg);
 }
 
 .highlight.fear {
-  background-color: #dc3545;
-  color: #fff;
+  background-color: var(--fear-bg);
+  color: var(--fear-fg);
 }
 
 .highlight.greed {
-  background-color: #28a745;
-  color: #fff;
+  background-color: var(--greed-bg);
+  color: var(--greed-fg);
 }
 
 #legend {
   margin-bottom: 1rem;
   padding: 0.75rem;
-  background-color: #f8f9fa;
+  background-color: var(--legend-bg);
   border-radius: 4px;
-  border-left: 4px solid #007bff;
+  border-left: 4px solid var(--link);
 }
 
 #legend p {
@@ -352,72 +433,336 @@ button:hover {
 #presets {
   margin-bottom: 1rem;
   padding: 0.75rem;
-  background-color: #fff9e6;
+  background-color: var(--presets-bg);
   border-radius: 4px;
-  border-left: 4px solid #ffc107;
+  border-left: 4px solid var(--emergency-bg);
 }
 
 .presets-label {
   margin: 0 0 0.5rem 0;
   font-weight: 600;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--muted);
 }
 
 .preset-select {
   width: 100%;
   padding: 0.6rem;
-  font-size: 0.95rem;
-  border: 1px solid #ddd;
+  font-size: 1rem;
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background-color: #fff;
-  color: #333;
+  background-color: var(--surface);
+  color: var(--fg);
   cursor: pointer;
   transition: border-color 0.2s;
 }
 
 .preset-select:hover {
-  border-color: #ffc107;
+  border-color: var(--emergency-bg);
 }
 
 .preset-select:focus {
-  outline: none;
-  border-color: #ffc107;
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+  border-color: var(--emergency-bg);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.35);
 }
 
 .button-group {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   justify-content: center;
   margin-top: 0.5rem;
 }
 
+/* flex の中では auto のマージンが左右に広がるので、ここで打ち消す */
+.button-group button {
+  margin: 0;
+}
+
 button.secondary {
-  background-color: #6c757d;
+  background-color: var(--secondary);
+  color: var(--secondary-fg);
 }
 
 button.secondary:hover {
-  background-color: #5a6268;
+  background-color: var(--secondary-hover);
 }
 
 footer {
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--border);
 }
 
 .footer {
   text-align: center;
-  color: #666;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
 .footer a {
-  color: #007bff;
+  color: var(--link);
   text-decoration: none;
 }
 
 .footer a:hover {
   text-decoration: underline;
+}
+/* 入力欄の見出しと、辞書の状態のお知らせ */
+.input-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.notice {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  border-left: 4px solid var(--notice-border);
+  background-color: var(--notice-bg);
+  color: var(--notice-fg);
+  font-size: 0.9rem;
+}
+
+.notice-error {
+  border-left-color: var(--error-border);
+  background-color: var(--error-bg);
+  color: var(--error-fg);
+}
+
+/* カテゴリーごとの内訳（種類と回数）。2段目に回して狭い画面でも折り返さない */
+.score-detail {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.score-detail:empty {
+  display: none;
+}
+
+.output-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.limits {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--border-strong);
+  background-color: var(--legend-bg);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* レーダーチャート。色はすべて変数なので、ダークにそのまま追従する */
+.radar {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.radar-grid {
+  fill: none;
+  stroke: var(--radar-grid);
+  stroke-width: 1;
+}
+
+.radar-axis {
+  stroke: var(--radar-axis);
+  stroke-width: 1;
+}
+
+.radar-tick {
+  fill: var(--radar-tick);
+  font-size: 11px;
+}
+
+.radar-label {
+  fill: var(--radar-label);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.radar-threshold {
+  fill: none;
+  stroke: var(--radar-threshold);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.radar-shape {
+  fill: var(--radar-shape-fill);
+  stroke: var(--radar-shape);
+  stroke-width: 2;
+}
+
+.radar-point {
+  fill: var(--radar-shape);
+}
+
+.radar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.radar-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0;
+  border-top-width: 3px;
+}
+
+.legend-threshold {
+  border-top-style: dashed;
+  border-top-color: var(--radar-threshold);
+}
+
+.legend-detected {
+  border-top-style: solid;
+  border-top-color: var(--radar-shape);
+}
+
+/* 操作できる要素は、指で押せる大きさとキーボードの行き先を確保する */
+button,
+.preset-select,
+textarea {
+  min-height: 44px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+.preset-select:focus {
+  outline: none;
+}
+
+.preset-select:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+/* 狭い画面 */
+@media (max-width: 480px) {
+  body {
+    margin: 1rem auto;
+  }
+
+  .accordion-header {
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
+  }
+
+  .accordion-content {
+    padding: 0 1.25rem;
+  }
+
+  .accordion-content.active {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+}
+
+/* 動きを減らす設定を尊重する */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ダークモード。変数だけを上書きする */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14181f;
+    --fg: #e6e9ef;
+    --muted: #a7b1bf;
+    --surface: #1c222b;
+    --border: #39414f;
+    --border-strong: #4a5464;
+    --rule: #2a313c;
+
+    --link: #6ea8fe;
+    --accent: #4ade80;
+    --accent-hover: #6ee79b;
+    --accent-fg: #000000;
+    --secondary: #424b5a;
+    --secondary-hover: #4e5868;
+    --secondary-fg: #e6e9ef;
+
+    --summary-from: #2b2a5c;
+    --summary-to: #3a2560;
+    --summary-fg: #ffffff;
+    --summary-inner: rgba(255, 255, 255, 0.12);
+
+    --legend-bg: #1c222b;
+    --presets-bg: #241f10;
+    --output-bg: #10141a;
+    --track: #2a313c;
+    --tips-from: #1c222b;
+    --tips-to: #232b36;
+    --tips-head: rgba(255, 255, 255, 0.06);
+    --tips-head-hover: rgba(255, 255, 255, 0.12);
+
+    --emergency-bg: #ffc107;
+    --emergency-fg: #000000;
+    --fear-bg: #ff8a95;
+    --fear-fg: #000000;
+    --greed-bg: #4ade80;
+    --greed-fg: #000000;
+
+    --badge-very-low: #7ee0a4;
+    --badge-low: #4ade80;
+    --badge-medium: #ffb454;
+    --badge-high: #ff8a95;
+    --badge-fg: #000000;
+
+    --radar-grid: #39414f;
+    --radar-axis: #4a5464;
+    --radar-tick: #a7b1bf;
+    --radar-label: #e6e9ef;
+    --radar-threshold: #ff8a95;
+    --radar-shape: #6ea8fe;
+    --radar-shape-fill: rgba(110, 168, 254, 0.22);
+
+    --fill-emergency-from: #ffc107;
+    --fill-emergency-to: #ffa726;
+    --fill-fear-from: #ff8a95;
+    --fill-fear-to: #ff6b7a;
+    --fill-greed-from: #4ade80;
+    --fill-greed-to: #2fbf6b;
+
+    --notice-bg: #241f10;
+    --notice-fg: #ffd98a;
+    --notice-border: #c79a00;
+    --error-bg: #2a1518;
+    --error-fg: #ffb3ba;
+    --error-border: #ff8a95;
+  }
 }
