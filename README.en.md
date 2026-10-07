@@ -37,6 +37,9 @@ You can try it straight from your browser.
 >![The dark theme](assets/en/screenshot3.png)
 >*The colours switch with the system theme, and the radar chart follows*
 
+>![Persuasion principles in use](assets/en/screenshot4.png)
+>*Which persuasion principle each detected word belongs to. Pressing a highlighted word opens why that tactic works*
+
 ---
 
 ## ✨ Features
@@ -48,6 +51,8 @@ You can try it straight from your browser.
 - Radar chart: three axes comparing the scores against an alert line. Drawn as SVG, with no charting library
 - Sample messages: 14 presets. Nine scam messages (phishing, fake delivery notice, fake tax office, investment scam, romance scam and more) and five legitimate notices (delivery, bank, workplace reminder, campaign, sign-in alert)
 - False positives on purpose: analysing a legitimate sample explains that legitimate notices use the same words
+- Persuasion breakdown: detected words are grouped into 14 tactics, each mapped to one of Cialdini's six principles
+- Per-word explanation: pressing a highlighted word opens why that tactic works, and that legitimate messages use it too
 - Customisable dictionary: edit `data/dictionary.json` to add your own terms
 - Japanese and English interface, remembered between visits
 - Dark mode following the system setting
@@ -183,6 +188,33 @@ The verdict follows thresholds on the overall score.
 | 15 to 39 | Low risk |
 | 14 and below | Very low risk |
 
+### Mapping to persuasion principles
+
+The 167 dictionary terms are divided into 14 tactic groups. Each group is mapped to one of Cialdini's six principles of persuasion (authority, social proof, liking, reciprocity, commitment and consistency, scarcity).
+
+| Tactic group | Principle | Terms |
+|---|---|---|
+| Demanding that you act now | Scarcity | 24 |
+| Setting a deadline | Scarcity | 10 |
+| Declaring it important | Authority | 4 |
+| Invoking law and punishment | Authority | 18 |
+| Threatening to cut you off | Outside the six | 23 |
+| Posing as a security incident | Authority | 15 |
+| Offering something for free | Reciprocity | 11 |
+| Showing a discount or a refund | Reciprocity | 5 |
+| Announcing that you won | Outside the six | 11 |
+| Saying you were chosen | Liking | 7 |
+| Limiting the number of places | Scarcity | 9 |
+| Promising a return | Outside the six | 18 |
+| Guaranteeing the outcome | Commitment and consistency | 6 |
+| Naming a sum | Outside the six | 6 |
+
+Groups that do not fit any of the six are marked "outside the six". The wish to avoid losing something you already have, and the reaction to a figure itself, sit outside Cialdini's framework. Saying so is more accurate than forcing a fit.
+
+**This dictionary holds no term for social proof.** Phrasing such as "100,000 people already use this" or "success stories everywhere" does appear in real scam messages, but none of the current 167 terms covers it. Seeing which axis a dictionary is missing is one of the things this tool can show you.
+
+After an analysis, the page lists which principles the detected words belong to. Pressing a highlighted word opens why that tactic works, and the reminder that legitimate messages use the same words.
+
 ### Scores of the sample messages
 
 The nine scam samples score as follows.
@@ -304,6 +336,7 @@ What is covered:
 - Radar chart: vertex coordinates and viewBox, and that a different number of axes still draws
 - Dictionary: `data/dictionary.json` and `js/dictionary.js` being identical, the counts, and no term appearing in two categories
 - Samples: the score and verdict of all 14 presets, matching the tables in this file
+- Tactics and principles: every dictionary term belonging to exactly one group, the principle names being a fixed set, and the mapping table in this file matching the data
 - Interface text: the Japanese and English key sets being identical, and no Japanese left in the English dictionary
 - HTML: the CSP, no external loads, no inline handlers or style attributes, and the element ids
 - Colours: a contrast ratio of at least 4.5:1 for every text and background pair, in both themes
@@ -325,22 +358,27 @@ emotion-based-scam-detector/
 │   ├── radar.js            # Radar chart drawn as SVG
 │   ├── messages.js         # Every interface string, in Japanese and English
 │   ├── dictionary.js       # Built-in copy of the dictionary (used under file://)
+│   ├── principles.js       # Built-in copy of the tactic groups (used under file://)
 │   └── samples.js          # The 14 sample messages
 ├── data/                   # Data you are meant to edit
-│   └── dictionary.json     # Trigger word dictionary (167 terms)
+│   ├── dictionary.json     # Trigger word dictionary (167 terms)
+│   └── principles.json     # 14 tactic groups and the principle each one uses
 ├── assets/                 # Images
 │   ├── screenshot.png      # Main view (light)
 │   ├── screenshot2.png     # Highlighted message
 │   ├── screenshot3.png     # Scores and radar chart (dark)
+│   ├── screenshot4.png     # Persuasion principles in use
 │   └── en/                 # The same views with the English interface
 │       ├── screenshot.png  # Main view (light)
 │       ├── screenshot2.png # Highlighted message
-│       └── screenshot3.png # Scores and radar chart (dark)
+│       ├── screenshot3.png # Scores and radar chart (dark)
+│       └── screenshot4.png # Persuasion principles in use
 ├── test/                   # Automated tests (node --test)
 │   ├── load.js             # Helper that loads the page scripts into the tests
 │   ├── scam-core.test.js   # Matching and scoring
 │   ├── radar.test.js       # Radar vertices and viewBox
 │   ├── dictionary.test.js  # Dictionary contents and the two copies agreeing
+│   ├── principles.test.js  # Group coverage and principle assignment
 │   ├── samples.test.js     # Sample scores
 │   ├── messages.test.js    # Interface strings
 │   ├── i18n.test.js        # Japanese and English staying in step

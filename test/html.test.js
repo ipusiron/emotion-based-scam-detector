@@ -49,7 +49,8 @@ test('noscriptがある', () => {
 test('画面が使う要素のidがそろっている', () => {
   const ids = ['presetSelect', 'inputText', 'analyzeBtn', 'clearBtn', 'result',
     'totalScore', 'riskBadge', 'assessmentText', 'highlightedText', 'radarChart',
-    'safetyTipsToggle', 'safetyTipsContent', 'dictionaryNotice'];
+    'safetyTipsToggle', 'safetyTipsContent', 'dictionaryNotice',
+    'sampleNotice', 'langToggle', 'principlesPanel', 'principlesList', 'principlesAbsent'];
   for (const category of ['emergency', 'fear', 'greed']) {
     ids.push(`${category}Bar`, `${category}Score`, `${category}Detail`);
   }
@@ -57,7 +58,7 @@ test('画面が使う要素のidがそろっている', () => {
 });
 
 test('読み込むスクリプトがすべてそろっている', () => {
-  for (const src of ['js/dictionary.js', 'js/samples.js', 'js/messages.js',
+  for (const src of ['js/dictionary.js', 'js/principles.js', 'js/samples.js', 'js/messages.js',
     'js/scam-core.js', 'js/radar.js', 'script.js']) {
     assert.ok(html.includes(`<script src="${src}"></script>`), `${src} を読み込んでいない`);
   }

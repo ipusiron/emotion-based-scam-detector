@@ -25,6 +25,13 @@
     3: [0.6, 0.3, 0.1]
   };
 
+  /**
+   * 説得の原理。Cialdini の6原理をこの順で並べる。
+   * どれにも当てはまらない手口は 'none' とする（画面では別枠で出す）。
+   */
+  var PRINCIPLES = ['authority', 'socialProof', 'liking', 'reciprocity',
+    'commitment', 'scarcity'];
+
   /** しきい値。総合点をこの順で判定する。 */
   var RISK_LEVELS = [
     { key: 'high', min: 70 },
@@ -224,6 +231,70 @@
   }
 
   /**
+   * 手口のまとまりの表を検べる。
+   *
+   * 辞書の全語がちょうど1つのまとまりに入っていること、
+   * まとまりの語がすべて辞書にあること、原理の名前が決まった集合であることを見る。
+   *
+   * @param {unknown} principles SCAM_PRINCIPLES の形
+   * @param {Object<string, string[]>} dictionary 辞書
+   * @returns {{ok: boolean, errors: string[], groups: string[]}}
+   */
+  function validatePrinciples(principles, dictionary) {
+    var errors = [];
+    if (!principles || typeof principles !== 'object' || !principles.groups) {
+      return { ok: false, errors: ['まとまりの表が読めない'], groups: [] };
+    }
+
+    var known = {};
+    Object.keys(dictionary || {}).forEach(function (category) {
+      (dictionary[category] || []).forEach(function (word) { known[word] = category; });
+    });
+
+    var seen = {};
+    var ids = Object.keys(principles.groups);
+    ids.forEach(function (id) {
+      var group = principles.groups[id];
+      if (!group || !Array.isArray(group.words)) {
+        errors.push(id + ': 語の配列がない');
+        return;
+      }
+      if (group.principle !== 'none' && PRINCIPLES.indexOf(group.principle) === -1) {
+        errors.push(id + ': 知らない原理「' + group.principle + '」');
+      }
+      group.words.forEach(function (word) {
+        if (!Object.prototype.hasOwnProperty.call(known, word)) {
+          errors.push(id + ': 「' + word + '」は辞書にない');
+        }
+        if (seen[word]) errors.push('「' + word + '」が ' + seen[word] + ' と ' + id + ' の両方にある');
+        seen[word] = id;
+      });
+    });
+    Object.keys(known).forEach(function (word) {
+      if (!seen[word]) errors.push('「' + word + '」がどのまとまりにも入っていない');
+    });
+
+    return { ok: errors.length === 0, errors: errors, groups: ids };
+  }
+
+  /**
+   * 語から、属するまとまりと原理を引ける表を作る。
+   * @param {Object} principles SCAM_PRINCIPLES の形
+   * @returns {Object<string, {group: string, principle: string}>}
+   */
+  function buildGroupIndex(principles) {
+    var index = {};
+    if (!principles || !principles.groups) return index;
+    Object.keys(principles.groups).forEach(function (id) {
+      var group = principles.groups[id];
+      (group.words || []).forEach(function (word) {
+        index[word] = { group: id, principle: group.principle };
+      });
+    });
+    return index;
+  }
+
+  /**
    * 本文を解析する。
    * @param {string} text 本文
    * @param {Object<string, string[]>} dictionary 辞書
@@ -233,21 +304,41 @@
    *   order: string[], total: number, level: string
    * }}
    */
-  function analyze(text, dictionary) {
+  function analyze(text, dictionary, principles) {
     var order = Object.keys(dictionary || {});
     var entries = buildEntries(dictionary || {});
     var spans = findSpans(text, entries);
+    var index = buildGroupIndex(principles);
 
     var categories = {};
     order.forEach(function (category) {
       categories[category] = { distinct: 0, occurrences: 0, words: [], score: 0 };
     });
 
+    var groups = {};
+    var principleCounts = {};
+
     spans.forEach(function (span) {
       var bucket = categories[span.category];
-      if (!bucket) return;
-      bucket.occurrences++;
-      if (bucket.words.indexOf(span.word) === -1) bucket.words.push(span.word);
+      if (bucket) {
+        bucket.occurrences++;
+        if (bucket.words.indexOf(span.word) === -1) bucket.words.push(span.word);
+      }
+
+      var found = index[span.word];
+      span.group = found ? found.group : null;
+      span.principle = found ? found.principle : null;
+      if (!found) return;
+
+      if (!groups[found.group]) groups[found.group] = { occurrences: 0, words: [], principle: found.principle };
+      groups[found.group].occurrences++;
+      if (groups[found.group].words.indexOf(span.word) === -1) groups[found.group].words.push(span.word);
+
+      if (!principleCounts[found.principle]) principleCounts[found.principle] = { occurrences: 0, groups: [] };
+      principleCounts[found.principle].occurrences++;
+      if (principleCounts[found.principle].groups.indexOf(found.group) === -1) {
+        principleCounts[found.principle].groups.push(found.group);
+      }
     });
 
     var scores = [];
@@ -262,6 +353,8 @@
     return {
       spans: spans,
       categories: categories,
+      groups: groups,
+      principles: principleCounts,
       order: order,
       total: total,
       level: riskLevel(total)
@@ -283,23 +376,32 @@
   }
 
   /**
-   * 本文全体をエスケープしてから、一致箇所だけを span で包む。
+   * 本文全体をエスケープしてから、一致箇所だけを包む。
    *
    * 先に全文をエスケープするので、入力に含まれるタグが
    * そのまま画面の組み立てに混ざることはない。
    *
+   * 手口のまとまりがわかっている語はボタンにする（押すと解説を出せる）。
+   * わからない語は span のままにして、押せる要素を増やさない。
+   *
    * @param {string} text 本文
-   * @param {{start: number, end: number, category: string}[]} spans findSpans の結果
+   * @param {{start: number, end: number, category: string, group?: string}[]} spans findSpans の結果
    * @returns {string} 画面に入れる HTML
    */
   function highlightHtml(text, spans) {
     var out = '';
     var pos = 0;
-    (spans || []).forEach(function (span) {
+    (spans || []).forEach(function (span, index) {
       out += escapeHtml(text.slice(pos, span.start));
-      out += '<span class="highlight ' + escapeHtml(span.category) + '">'
-        + escapeHtml(text.slice(span.start, span.end))
-        + '</span>';
+      var body = escapeHtml(text.slice(span.start, span.end));
+      var klass = 'highlight ' + escapeHtml(span.category);
+      if (span.group) {
+        out += '<button type="button" class="' + klass + '"'
+          + ' data-index="' + index + '"'
+          + ' data-group="' + escapeHtml(span.group) + '">' + body + '</button>';
+      } else {
+        out += '<span class="' + klass + '">' + body + '</span>';
+      }
       pos = span.end;
     });
     out += escapeHtml(text.slice(pos));
@@ -311,8 +413,11 @@
     SATURATION_WORDS: SATURATION_WORDS,
     REPEAT_WEIGHT: REPEAT_WEIGHT,
     RISK_LEVELS: RISK_LEVELS,
+    PRINCIPLES: PRINCIPLES,
     weightsFor: weightsFor,
     validateDictionary: validateDictionary,
+    validatePrinciples: validatePrinciples,
+    buildGroupIndex: buildGroupIndex,
     buildEntries: buildEntries,
     findSpans: findSpans,
     categoryScore: categoryScore,

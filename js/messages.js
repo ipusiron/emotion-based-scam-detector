@@ -50,6 +50,79 @@
       'button.analyze': '解析',
       'button.clear': 'クリア',
 
+      // 説得の原理（Cialdini の6原理）
+      'principle.authority.label': '権威',
+      'principle.authority.desc': '公的機関や有名企業の名を借りると、中身を確かめずに従いやすくなる。',
+      'principle.socialProof.label': '社会的証明',
+      'principle.socialProof.desc': '多くの人がそうしていると示されると、それが正しいと感じやすくなる。',
+      'principle.liking.label': '好意',
+      'principle.liking.desc': '自分に好意を向けてくる相手や、自分と似た相手の頼みは断りにくい。',
+      'principle.reciprocity.label': '返報性',
+      'principle.reciprocity.desc': '先に何かをもらうと、返さなければという気持ちが働く。',
+      'principle.commitment.label': '一貫性',
+      'principle.commitment.desc': '一度乗った前提と矛盾しないように、考えと行動を続けてしまう。',
+      'principle.scarcity.label': '希少性',
+      'principle.scarcity.desc': '手に入りにくいもの、残り時間が少ないものほど価値が高く見える。',
+      'principle.none.label': '6原理の外',
+      'principle.none.desc': 'Cialdiniの6原理には当てはまらない。損を避けたい気持ちや、金額そのものへの反応を使う。',
+
+      // 手口のまとまりと、それが効く理由
+      'group.immediacy.label': 'いますぐ動けと迫る',
+      'group.immediacy.why': '考える時間を奪うのがねらいです。立ち止まって確かめられると困る側が使います。'
+        + '正規の連絡でも急ぎのことはあるので、この語だけで詐欺とは決まりません。',
+      'group.deadline.label': '期限を切る',
+      'group.deadline.why': '締切があると、人は中身より間に合うかどうかに気を取られます。'
+        + '期限が不自然に短くないか、過ぎたらどうなると書いてあるかを見てください。',
+      'group.importance.label': '重要だと銘打つ',
+      'group.importance.why': '件名や冒頭に「重要」と置くと、送り手が決めた重みを受け手が引き受けてしまいます。'
+        + '誰にとって重要なのかは、たいてい書かれていません。',
+      'group.legalThreat.label': '法と罰をちらつかせる',
+      'group.legalThreat.why': '警察・法的措置・罰金といった言葉は、反論しにくい相手を連想させます。'
+        + '本物の行政手続きが、メール1通とリンクだけで完結することはありません。',
+      'group.accountLoss.label': '使えなくなると告げる',
+      'group.accountLoss.why': 'いま使えているものを失うと言われると、同じだけ得をする話より強く反応します。'
+        + 'アカウントの状態は、公式サイトに自分でログインすれば確かめられます。',
+      'group.securityIncident.label': 'セキュリティ上の異常を装う',
+      'group.securityIncident.why': '「不正アクセスを検知しました」と言われると、'
+        + '受け手は自分を守る側に立ったつもりで指示に従います。'
+        + '守る行動がリンクを押すことなら、そこを疑ってください。',
+      'group.freeGift.label': 'ただで与えると言う',
+      'group.freeGift.why': '先に何かをもらうと、返さなければという気持ちが働きます。'
+        + '無料のものを受け取るために個人情報を求められたら、それが対価です。',
+      'group.discount.label': '値引きや返金を示す',
+      'group.discount.why': '返金や割引は、受け手が得をしたと感じる形の贈り物です。'
+        + '返金を受け取るのに口座番号やカード情報が要るなら、流れが逆を向いています。',
+      'group.winning.label': '当たったと告げる',
+      'group.winning.why': '応募した覚えのない当選は、まず作り話です。'
+        + '当たったと信じた時点で、受け取りの手続きという名目の要求が通りやすくなります。',
+      'group.chosen.label': 'あなたが選ばれたと言う',
+      'group.chosen.why': '「選ばれた」「特別な」と言われると、相手が自分に好意を持っていると感じ、'
+        + '頼みを断りにくくなります。なぜ自分が選ばれたのかは、たいてい書かれていません。',
+      'group.exclusivity.label': '数と枠を限る',
+      'group.exclusivity.why': '残りが少ないと示されると、判断を急ぎます。'
+        + '先着や限定の根拠を、自分の側から確かめられるかどうかを見てください。',
+      'group.profit.label': '儲かると示す',
+      'group.profit.why': '利益の話は、損のおそれとセットでしか成り立ちません。'
+        + '片方しか書かれていない時点で、釣り合いが取れていません。',
+      'group.guarantee.label': '確実だと請け合う',
+      'group.guarantee.why': '言い切られると、受け手はその前提に乗ったまま考えを進めてしまいます。'
+        + '確実な利益を約束できる投資はありません。',
+      'group.money.label': '金額を見せる',
+      'group.money.why': '具体的な金額は、話を現実のことのように感じさせます。'
+        + '金額の大きさは、話の確からしさとは関わりません。',
+
+      // 原理のパネルと、語の解説のパネル
+      'panel.principles.heading': '使われている説得の原理',
+      'panel.principles.empty': '辞書の語が見つからなかったので、内訳は出せません。',
+      'panel.principles.count': '{occurrences}回',
+      'panel.principles.absent': '見つからなかった原理：{names}',
+      'panel.word.heading': '選んだ語について',
+      'panel.word.hint': '色の付いた語を押すと、その語が何をねらっているかが出ます。',
+      'panel.word.category': '感情',
+      'panel.word.group': '手口',
+      'panel.word.principle': '説得の原理',
+      'panel.word.caution': 'この語は、正規の連絡でも使われます。',
+
       // 危険度の見出しと説明
       'risk.high.label': '高リスク',
       'risk.high.text': 'このメッセージは詐欺の可能性が非常に高いです。リンクをクリックせず、送信元に直接確認してください。',
@@ -163,6 +236,78 @@
       'input.placeholder': 'Paste an email or chat message here...',
       'button.analyze': 'Analyse',
       'button.clear': 'Clear',
+
+      // 説得の原理（Cialdini の6原理）
+      'principle.authority.label': 'Authority',
+      'principle.authority.desc': 'Borrowing the name of an official body or a known company makes people comply without checking.',
+      'principle.socialProof.label': 'Social proof',
+      'principle.socialProof.desc': 'Being told that many others are doing something makes it feel like the right thing to do.',
+      'principle.liking.label': 'Liking',
+      'principle.liking.desc': 'A request is hard to refuse when it comes from someone who seems to like you, or to be like you.',
+      'principle.reciprocity.label': 'Reciprocity',
+      'principle.reciprocity.desc': 'Receiving something first creates a feeling that it has to be returned.',
+      'principle.commitment.label': 'Commitment and consistency',
+      'principle.commitment.desc': 'Once a premise is accepted, people keep reasoning and acting in line with it.',
+      'principle.scarcity.label': 'Scarcity',
+      'principle.scarcity.desc': 'Whatever is hard to get, or about to run out, looks more valuable.',
+      'principle.none.label': 'Outside the six',
+      'principle.none.desc': 'Not one of Cialdini\'s six. These rely on the wish to avoid a loss, or on a reaction to the sum itself.',
+
+      // 手口のまとまりと、それが効く理由
+      'group.immediacy.label': 'Demanding that you act now',
+      'group.immediacy.why': 'The aim is to take away the time to think. It is used by someone who cannot afford '
+        + 'for you to stop and check. Legitimate messages are sometimes urgent too, so this wording alone proves nothing.',
+      'group.deadline.label': 'Setting a deadline',
+      'group.deadline.why': 'A deadline shifts attention from what is being asked to whether you will make it. '
+        + 'Look at whether the deadline is unreasonably short, and at what it says will happen once it passes.',
+      'group.importance.label': 'Declaring it important',
+      'group.importance.why': 'Putting "important" in the subject line makes the reader accept a weight the sender chose. '
+        + 'Who it is important to is usually left unsaid.',
+      'group.legalThreat.label': 'Invoking law and punishment',
+      'group.legalThreat.why': 'Police, legal action and fines evoke a party you cannot argue with. '
+        + 'A genuine administrative process is never completed through one email and a link.',
+      'group.accountLoss.label': 'Threatening to cut you off',
+      'group.accountLoss.why': 'Losing something you already have provokes a stronger reaction than gaining as much. '
+        + 'The state of your account is something you can check by signing in to the official site yourself.',
+      'group.securityIncident.label': 'Posing as a security incident',
+      'group.securityIncident.why': '"We have detected unauthorised access" puts the reader on the defending side, '
+        + 'and they follow the instructions from there. If the defending act is to click a link, that is the part to doubt.',
+      'group.freeGift.label': 'Offering something for free',
+      'group.freeGift.why': 'Receiving something first creates a feeling that it has to be returned. '
+        + 'If personal details are required to collect the free thing, those details are the price.',
+      'group.discount.label': 'Showing a discount or a refund',
+      'group.discount.why': 'A refund or a discount is a gift shaped so the reader feels they gained. '
+        + 'If collecting a refund needs your account or card number, the money is flowing the wrong way.',
+      'group.winning.label': 'Announcing that you won',
+      'group.winning.why': 'A prize from a draw you never entered is almost certainly an invention. '
+        + 'Once the win is believed, requests made in the name of claiming it go through easily.',
+      'group.chosen.label': 'Saying you were chosen',
+      'group.chosen.why': '"Selected" and "special" make the reader feel the sender favours them, '
+        + 'which makes a request harder to refuse. Why you in particular is usually left unsaid.',
+      'group.exclusivity.label': 'Limiting the number of places',
+      'group.exclusivity.why': 'Being shown that little is left makes people decide in a hurry. '
+        + 'Look at whether you can verify the limit from your own side.',
+      'group.profit.label': 'Promising a return',
+      'group.profit.why': 'A return only exists alongside a risk of loss. '
+        + 'If only one side is written down, the picture is not balanced.',
+      'group.guarantee.label': 'Guaranteeing the outcome',
+      'group.guarantee.why': 'A flat assurance keeps the reader reasoning on top of that premise. '
+        + 'No investment can promise a certain return.',
+      'group.money.label': 'Naming a sum',
+      'group.money.why': 'A concrete figure makes the story feel like something that is actually happening. '
+        + 'How large the sum is has nothing to do with how true the story is.',
+
+      // 原理のパネルと、語の解説のパネル
+      'panel.principles.heading': 'Persuasion principles in use',
+      'panel.principles.empty': 'No dictionary words were found, so there is nothing to break down.',
+      'panel.principles.count': '{occurrences} occurrences',
+      'panel.principles.absent': 'Principles not found: {names}',
+      'panel.word.heading': 'About the selected word',
+      'panel.word.hint': 'Press a highlighted word to see what it is aiming for.',
+      'panel.word.category': 'Emotion',
+      'panel.word.group': 'Tactic',
+      'panel.word.principle': 'Principle',
+      'panel.word.caution': 'Legitimate messages use this word as well.',
 
       // 危険度の見出しと説明
       'risk.high.label': 'High risk',

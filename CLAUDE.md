@@ -27,8 +27,10 @@ Scripts are plain (non-module) so the page also works when opened with `file://`
 | `js/radar.js` | `ScamRadar` | Radar chart. Vertex math is separate from drawing |
 | `js/messages.js` | `ScamMessages` | Every user-facing string, keyed, in `ja` and `en`. `script.js` holds no Japanese literals |
 | `js/dictionary.js` | `SCAM_DICTIONARY` | Built-in copy of the dictionary, used under `file://` |
+| `js/principles.js` | `SCAM_PRINCIPLES` | Built-in copy of the tactic groups, used under `file://` |
 | `js/samples.js` | `SCAM_SAMPLES` | The 14 preset messages as `{kind, text}`; `kind` is `scam` or `legit` |
 | `data/dictionary.json` | — | The dictionary people edit. Fetched when served over HTTP |
+| `data/principles.json` | — | 14 tactic groups, each mapped to a Cialdini principle. Fetched the same way |
 
 ### Interface language
 
@@ -43,6 +45,25 @@ so the numbers on screen do not change when the language does.
 `test/i18n.test.js` asserts the `ja` and `en` key sets are identical, that no Japanese is left in
 the English table (apart from the language button), that every `data-i18n` key exists, and that
 `README.md` and `README.en.md` have the same heading structure.
+
+### Tactic groups and persuasion principles
+
+Every dictionary term belongs to exactly one group in `data/principles.json`, and every group
+carries one of `ScamCore.PRINCIPLES` (Cialdini's six) or `'none'`. `validatePrinciples` rejects a
+table that leaves a term out, assigns one twice, or uses an unknown principle, so the two files
+cannot drift apart.
+
+`analyze(text, dictionary, principles)` takes the table as an optional third argument. Without it
+the result is byte-for-byte what the first two phases produced, which is how the older tests still
+pass. With it, each span gains `group` and `principle`, and the result gains `groups` and
+`principles` breakdowns.
+
+`highlightHtml` renders a term as a `<button>` when its group is known and as a `<span>` otherwise,
+so the page never grows tab stops that lead nowhere.
+
+The current dictionary has no term for social proof. That gap is asserted in
+`test/principles.test.js` on purpose: if someone adds such a term, the test fails and points at the
+README passage that has to change with it.
 
 ### Legitimate samples
 
@@ -116,6 +137,7 @@ The total weights the strongest emotions rather than averaging, because real sca
 - Do not add dependencies, a CDN, a bundler, or ES module syntax (`file://` must keep working).
 - Do not put user-facing strings in `script.js` or `index.html`; add them to `js/messages.js` in both languages and reference them with `data-i18n`.
 - Do not let `README.md` and `README.en.md` drift apart in structure; `test/i18n.test.js` compares their headings.
+- Do not add a term to `data/dictionary.json` without placing it in a group in `data/principles.json` (and both built-in copies); the tests fail otherwise.
 - Do not write color literals outside the `:root` blocks in `style.css`; `test/contrast.test.js` enforces this and the 4.5:1 ratio in both themes.
 - Do not add inline event handlers or `style` attributes; the CSP has no `'unsafe-inline'`.
 - Keep the long-vowel notation (ブラウザー, サーバー, ディレクトリー) and no space between Japanese and alphanumerics; `test/format.test.js` checks this.

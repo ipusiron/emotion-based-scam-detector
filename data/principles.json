@@ -1,0 +1,241 @@
+{
+  "groups": {
+    "immediacy": {
+      "principle": "scarcity",
+      "words": [
+        "urgent",
+        "immediately",
+        "now",
+        "asap",
+        "act now",
+        "hurry",
+        "quick",
+        "fast",
+        "instant",
+        "don't delay",
+        "urgent action",
+        "immediate action",
+        "至急",
+        "緊急",
+        "今すぐ",
+        "早急",
+        "急ぎ",
+        "速やかに",
+        "直ちに",
+        "すぐに",
+        "大至急",
+        "急いで",
+        "迅速",
+        "即座に"
+      ]
+    },
+    "deadline": {
+      "principle": "scarcity",
+      "words": [
+        "deadline",
+        "expires soon",
+        "time sensitive",
+        "within 24 hours",
+        "limited time",
+        "期限",
+        "本日中",
+        "24時間以内",
+        "本日限り",
+        "お早めに"
+      ]
+    },
+    "importance": {
+      "principle": "authority",
+      "words": [
+        "important",
+        "response required",
+        "重要",
+        "確認のお願い"
+      ]
+    },
+    "legalThreat": {
+      "principle": "authority",
+      "words": [
+        "penalty",
+        "fine",
+        "police",
+        "lawsuit",
+        "legal action",
+        "court",
+        "criminal",
+        "arrest",
+        "prosecution",
+        "forfeit",
+        "violation",
+        "consequences",
+        "罰金",
+        "警察",
+        "差し押さえ",
+        "法的措置",
+        "訴訟",
+        "違反"
+      ]
+    },
+    "accountLoss": {
+      "principle": "none",
+      "words": [
+        "account suspension",
+        "suspend",
+        "terminate",
+        "locked",
+        "blocked",
+        "frozen",
+        "lose access",
+        "permanent",
+        "revoke",
+        "cancel",
+        "アカウント停止",
+        "一時停止",
+        "一時保留",
+        "停止",
+        "凍結",
+        "利用停止",
+        "ロック",
+        "ブロック",
+        "制限",
+        "無効",
+        "取り消し",
+        "失効",
+        "永久停止"
+      ]
+    },
+    "securityIncident": {
+      "principle": "authority",
+      "words": [
+        "warning",
+        "fraud",
+        "unauthorized",
+        "security alert",
+        "breach",
+        "compromised",
+        "investigate",
+        "異常",
+        "不正アクセス",
+        "不正利用",
+        "セキュリティ警告",
+        "検知",
+        "調査",
+        "疑わしい",
+        "危険"
+      ]
+    },
+    "freeGift": {
+      "principle": "reciprocity",
+      "words": [
+        "free",
+        "gift",
+        "bonus",
+        "100% free",
+        "no cost",
+        "無料",
+        "ボーナス",
+        "特典",
+        "プレゼント",
+        "ギフト",
+        "完全無料"
+      ]
+    },
+    "discount": {
+      "principle": "reciprocity",
+      "words": [
+        "discount",
+        "save money",
+        "割引",
+        "キャッシュバック",
+        "返金"
+      ]
+    },
+    "winning": {
+      "principle": "none",
+      "words": [
+        "prize",
+        "jackpot",
+        "lottery",
+        "claim",
+        "congratulations",
+        "当選",
+        "賞金",
+        "おめでとう",
+        "当選者",
+        "抽選",
+        "受け取り"
+      ]
+    },
+    "chosen": {
+      "principle": "liking",
+      "words": [
+        "winner",
+        "exclusive",
+        "selected",
+        "chosen",
+        "lucky",
+        "選ばれた",
+        "特別"
+      ]
+    },
+    "exclusivity": {
+      "principle": "scarcity",
+      "words": [
+        "limited offer",
+        "special offer",
+        "limited slots",
+        "act fast",
+        "限定",
+        "先着",
+        "残りわずか",
+        "今だけ",
+        "チャンス"
+      ]
+    },
+    "profit": {
+      "principle": "none",
+      "words": [
+        "reward",
+        "big earnings",
+        "profit",
+        "earn",
+        "income",
+        "investment",
+        "returns",
+        "double your",
+        "triple your",
+        "報酬",
+        "収益",
+        "利益",
+        "儲かる",
+        "稼げる",
+        "副業",
+        "投資",
+        "配当",
+        "リターン"
+      ]
+    },
+    "guarantee": {
+      "principle": "commitment",
+      "words": [
+        "guaranteed",
+        "risk-free",
+        "確実",
+        "保証",
+        "必ず",
+        "リスクなし"
+      ]
+    },
+    "money": {
+      "principle": "none",
+      "words": [
+        "cash",
+        "money",
+        "現金",
+        "お金",
+        "100万円",
+        "高額"
+      ]
+    }
+  }
+}
