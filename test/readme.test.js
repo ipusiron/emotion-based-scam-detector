@@ -68,6 +68,18 @@ test('READMEが参照する画像がすべて実在する', () => {
   }
 });
 
+test('README.en.mdが参照する画像もすべて実在する', () => {
+  const en = read('README.en.md');
+  const images = [...en.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)]
+    .map((m) => m[1])
+    .filter((p) => !/^https?:/.test(p));
+  assert.ok(images.length >= 3, `画像の参照が ${images.length} 件しかない`);
+  for (const rel of images) {
+    assert.ok(fs.existsSync(new URL(`../${rel}`, import.meta.url)), `${rel} が存在しない`);
+    assert.ok(rel.startsWith('assets/en/'), `英語版が日本語の画面を指している: ${rel}`);
+  }
+});
+
 test('消したファイルへの参照が残っていない', () => {
   // ルート直下の dictionary.json は削除した
   assert.ok(!/^├── dictionary\.json/m.test(readme));
