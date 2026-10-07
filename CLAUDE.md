@@ -4,65 +4,103 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Emotion-Based Scam Detector** is a client-side browser tool that analyzes text (emails, chat messages) for emotionally charged language commonly used in phishing and scam messages. It detects keywords related to three emotional triggers:
+Emotion-Based Scam Detector is a client-side browser tool that analyzes text (emails, chat messages) for emotionally charged language commonly used in phishing and scam messages. It detects words in three categories:
 
-- **Emergency** (緊急性): Urgent language like "urgent", "immediately", "asap", "至急"
-- **Fear** (恐怖): Fear-inducing terms like "penalty", "police", "lawsuit", "罰金"
-- **Greed** (欲望): Enticing phrases like "reward", "free", "prize", "報酬"
+- Emergency (緊急性): urgency that removes time to think — "urgent", "immediately", "至急", "24時間以内"
+- Fear (恐怖): threatened loss — "penalty", "police", "罰金", "利用停止"
+- Greed (欲望): promised gain — "reward", "free", "報酬", "当選"
 
-The tool highlights detected words with color-coded spans, displays a radar chart visualization, and assigns a risk level (極小/低/中/高) based on calculated scores.
+The tool highlights detected words with color-coded spans, draws a radar chart, and assigns a risk level (極小/低/中/高).
+
+There are no runtime dependencies. No CDN, no npm packages, no bundler. Everything the page loads comes from this repository.
 
 ## Architecture
 
-This is a static web application with no server-side processing:
+Scripts are plain (non-module) so the page also works when opened with `file://`. Each file assigns one global.
 
-- **index.html**: Page structure with textarea input, preset selector, analyze button, results display (radar chart, progress bars, highlighted text), and accordion-based safety tips
-- **style.css**: Styling including category-specific highlight colors (yellow for emergency, red for fear, green for greed)
-- **script.js**: Core analysis logic including:
-  - Fetching `data/dictionary.json` on page load
-  - Text analysis using regex patterns (word boundaries for ASCII, direct match for Japanese)
-  - Score calculation: each category 0-10 (count × 2, capped at 10), total 0-100
-  - Chart.js radar chart visualization
-  - 9 preset sample messages (Japanese/English phishing, delivery, tax, investment, lottery, job, romance scams)
-- **data/dictionary.json**: Keyword dictionary (169 words) organized by category with both English and Japanese terms
+| File | Global | Role |
+|---|---|---|
+| `index.html` | — | Page structure. Loads the scripts in order, `script.js` last |
+| `style.css` | — | Colors as CSS variables in `:root`, overridden under `prefers-color-scheme: dark` |
+| `script.js` | — | DOM wiring only: reads input, updates the view, no analysis logic |
+| `js/scam-core.js` | `ScamCore` | Matching and scoring. Never touches the DOM |
+| `js/radar.js` | `ScamRadar` | Radar chart. Vertex math is separate from drawing |
+| `js/messages.js` | `ScamMessages` | Every user-facing string, keyed. `script.js` holds no Japanese literals |
+| `js/dictionary.js` | `SCAM_DICTIONARY` | Built-in copy of the dictionary, used under `file://` |
+| `js/samples.js` | `SCAM_SAMPLES` | The nine preset messages |
+| `data/dictionary.json` | — | The dictionary people edit. Fetched when served over HTTP |
+
+### Dictionary loading
+
+`script.js` fetches `data/dictionary.json` when the page is served over HTTP. Under `file://` it skips the fetch (it would only produce a console error) and uses `SCAM_DICTIONARY`, showing a notice. If neither validates, the analyze button is disabled — the tool never scores with an empty dictionary.
+
+`test/dictionary.test.js` asserts the JSON and the built-in copy are identical. Edit both when adding words.
 
 ## Development
 
 ### Running locally
-```bash
-# Open directly in browser
-start index.html
 
-# Or use a local server (required for fetch to work in some browsers)
+```bash
 python -m http.server 8000
-# Then visit http://localhost:8000
+# then visit http://localhost:8000
 ```
+
+Opening `index.html` directly also works, with the built-in dictionary.
+
+### Tests
+
+```bash
+npm test
+```
+
+Node.js 22 or newer, no dependencies. `test/load.js` reads the plain scripts with `vm.runInThisContext`, so tests see the same globals the page does.
+
+GitHub Actions runs `npm test` on push and pull request.
 
 ### Modifying detection keywords
-Edit `data/dictionary.json` to add/remove keywords. Changes are loaded on page refresh. Structure:
-```json
-{
-  "emergency": ["keyword1", ...],
-  "fear": ["keyword1", ...],
-  "greed": ["keyword1", ...]
-}
-```
 
-**Note**: Adding new categories requires updates to both `script.js` (categoryCount object, radar chart labels) and `index.html` (legend, progress bars).
+Edit `data/dictionary.json` and `js/dictionary.js` together, then update the word counts in `README.md` (two places) and `test/dictionary.test.js`.
+
+Adding a category also requires: a weight list of the same length in `TOTAL_WEIGHTS` (`js/scam-core.js`), the category in `CATEGORIES` (`script.js`), label and hint keys in `js/messages.js`, and the legend plus a score row in `index.html`. The radar adapts to the number of axes on its own.
 
 ## Key Implementation Details
 
-- **Risk scoring** (script.js:232-255): Category scores = min(count × 2, 10), total = (sum / 30) × 100
-  - 極小リスク: < 15
-  - 低リスク: 15-39
-  - 中リスク: 40-69
-  - 高リスク: ≥ 70
-- **Word boundary handling** (script.js:212-215): Uses `\b` regex boundaries only for words containing ASCII characters; Japanese words match directly
-- **XSS prevention**: `escapeHtml()` function sanitizes user input before DOM insertion
-- **Security headers**: CSP, X-Frame-Options, X-Content-Type-Options, SRI for Chart.js CDN
+### Matching (`js/scam-core.js`)
+
+`buildEntries` sorts the dictionary longest-first with a deterministic tie-break. `findSpans` scans the text once, taking the longest match at each position and skipping past it, so spans never overlap and no position is counted twice.
+
+Word boundaries are required only on the side where the dictionary word ends in an ASCII alphanumeric character. This is why `24時間以内` matches mid-sentence while `now` does not match inside `known`.
+
+### Scoring
+
+```
+raw      = distinct words + 0.5 × (occurrences − distinct words)
+category = min(10, round(raw × 2))          // 5 distinct words reach the cap
+total    = round(10 × (0.6×s1 + 0.3×s2 + 0.1×s3))   // s sorted descending
+```
+
+Thresholds: 高リスク ≥ 70, 中リスク ≥ 40, 低リスク ≥ 15, otherwise 極小リスク.
+
+The total weights the strongest emotions rather than averaging, because real scams lean on two emotions rather than three. `test/samples.test.js` pins the resulting score of each preset; those values also appear in `README.md`.
+
+### Highlighting
+
+`highlightHtml` escapes the whole text first, then wraps the matched ranges. Input markup can never reach the DOM as markup.
+
+### Radar chart
+
+`ScamRadar.points` returns the polygon vertices and `ScamRadar.viewBox` the viewBox for a given axis count; both are pure and tested. Colors come from CSS classes, so dark mode needs no JavaScript.
+
+## Constraints
+
+- Do not add dependencies, a CDN, a bundler, or ES module syntax (`file://` must keep working).
+- Do not put user-facing strings in `script.js`; add them to `js/messages.js`.
+- Do not write color literals outside the `:root` blocks in `style.css`; `test/contrast.test.js` enforces this and the 4.5:1 ratio in both themes.
+- Do not add inline event handlers or `style` attributes; the CSP has no `'unsafe-inline'`.
+- Keep the long-vowel notation (ブラウザー, サーバー, ディレクトリー) and no space between Japanese and alphanumerics; `test/format.test.js` checks this.
 
 ## Deployment
 
-Designed for static hosting (GitHub Pages, Netlify). Demo: https://ipusiron.github.io/emotion-based-scam-detector/
+Static hosting (GitHub Pages, Netlify). Demo: https://ipusiron.github.io/emotion-based-scam-detector/
 
 Part of the "生成AIで作るセキュリティツール100" (100 Security Tools with Generative AI) project.
