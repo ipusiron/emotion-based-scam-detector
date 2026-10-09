@@ -103,6 +103,12 @@ You can also open `index.html` directly. In that case `fetch` is unavailable, so
 
 The tool only counts how the words in a message compare with a dictionary. That simplicity means it is useful well beyond security work.
 
+### Ways of using this tool in particular
+
+- Confirming that a new word and a repeat carry different weight (classes on counting words): a category score counts a distinct word (its first appearance) as 1.0 and a repeat of the same word as 0.5, scaled so that 5 words reach the maximum of 10. Five different words reach the maximum of 10, while repeating a single word 5 times stops at 6. You can confirm with numbers that breadth of vocabulary counts more strongly than how often one word recurs
+- Confirming that the score caps partway (saturation and ceiling classes): a category score has a ceiling of 10, so once 5 different words reach 10, adding a 6th or 7th keeps it at 10. It shows that with a thresholded measure, past a certain count the differences stop showing. It is also why two dense texts cannot be told apart by this score alone
+- Confirming that a continuous score turns into levels at thresholds (classification and threshold classes): the overall score is split into four levels, high at 70 and over, medium at 40 to 69, low at 15 to 39 and very low at 14 or under. A total of 69 is medium, and one point more, 70, becomes high. You can confirm on real points how a boundary is set when cutting a continuous value into levels
+
 ### Security learning and practice
 
 - Awareness training: have people paste a real phishing email and compare the radar shapes. You can point at where the pressure sits instead of describing it.
